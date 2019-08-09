@@ -65,10 +65,10 @@ IntervalDualTessellationCover$set(
   value = function(value) {
     if (missing(value)) { private$.number_intervals } else {
       if (length(value) != 1) {
-        stop("A dual tessellation covers only a 1-dimensional lens space.")
+        stop("An interval tessellation covers a 1-dimensional space.")
       }
       if (value < 2) {
-        stop("A dual tessellation requires at least 2 intervals.")
+        stop("An interval dual tessellation needs at least 2 sets.")
       }
       private$.number_intervals <- value
       self
@@ -81,13 +81,12 @@ IntervalDualTessellationCover$set(
 IntervalDualTessellationCover$set(
   which = "public", name = "validate",
   value = function(filter) {
-    stopifnot(!is.null(private$.number_intervals))
+    stopifnot(! is.null(private$.number_intervals))
     stopifnot(length(self$number_intervals) == 1)
     stopifnot(self$number_intervals >= 2)
-    fv <- filter()
-    f_dim <- ncol(fv)
+    f_dim <- ncol(filter())
     if (f_dim != 1) {
-      stop("Interval tessellations require a 1-dimensional filter.")
+      stop("An interval tessellation requires a 1-dimensional lens.")
     }
   }
 )
@@ -106,7 +105,7 @@ IntervalDualTessellationCover$set(
     sprintf(
       "%s Cover: (number intervals = [%s])",
       titlecase(private$.typename),
-      paste0(self$number_intervals, collapse = ", ")
+      self$number_intervals
     )
   }
 )
