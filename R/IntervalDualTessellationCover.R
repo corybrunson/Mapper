@@ -41,14 +41,15 @@
 #'   must be at least 2.
 #' @export
 IntervalDualTessellationCover <- R6::R6Class(
-  "IntervalDualTessellationCover",
+  classname = "IntervalDualTessellationCover",
   inherit = CoverRef,
   private = list(.number_intervals = NULL)
 )
 
 #' @export
 IntervalDualTessellationCover$set(
-  "public", "initialize", function(...) {
+  which = "public", name = "initialize",
+  value = function(...) {
     super$initialize(typename = "Interval Dual Tessellation")
     params <- list(...)
     if ("number_intervals" %in% names(params)) {
@@ -60,7 +61,8 @@ IntervalDualTessellationCover$set(
 ## Active binding to set `number_intervals`
 ## number_intervals ----
 IntervalDualTessellationCover$set(
-  "active", "number_intervals", function(value) {
+  which = "active", name = "number_intervals",
+  value = function(value) {
     if (missing(value)) { private$.number_intervals } else {
       if (length(value) != 1) {
         stop("A dual tessellation covers only a 1-dimensional lens space.")
@@ -77,7 +79,8 @@ IntervalDualTessellationCover$set(
 ## Validate parameter settings
 ## validate ----
 IntervalDualTessellationCover$set(
-  "public", "validate", function(filter) {
+  which = "public", name = "validate",
+  value = function(filter) {
     stopifnot(!is.null(private$.number_intervals))
     stopifnot(length(self$number_intervals) == 1)
     stopifnot(self$number_intervals >= 2)
@@ -91,7 +94,8 @@ IntervalDualTessellationCover$set(
 
 ## format ----
 IntervalDualTessellationCover$set(
-  "public", "format", function(...) {
+  which = "public", name = "format",
+  value = function(...) {
     titlecase <- function(x) {
       s <- strsplit(x, " ")[[1]]
       paste(
@@ -110,7 +114,8 @@ IntervalDualTessellationCover$set(
 ## This function is specific to the interval-type covers
 ## interval_bounds ----
 IntervalDualTessellationCover$set(
-  "public", "interval_bounds", function(filter, index = NULL) {
+  which = "public", name = "interval_bounds",
+  value = function(filter, index = NULL) {
     self$validate(filter)
     
     ## Get filter range and length
@@ -149,7 +154,8 @@ IntervalDualTessellationCover$set(
 ## Setup dual index sets
 ## construct_index_set ----
 IntervalDualTessellationCover$set(
-  "public", "construct_index_set", function(...) {
+  which = "public", name = "construct_index_set",
+  value = function(...) {
     
     ## Calculate hyper-parameters
     n1 <- ceiling(self$number_intervals / 2)
@@ -167,7 +173,8 @@ IntervalDualTessellationCover$set(
 ## union covers the filter space
 ## construct_cover ----
 IntervalDualTessellationCover$set(
-  "public", "construct_cover", function(filter, index = NULL) {
+  which = "public", name = "construct_cover",
+  value = function(filter, index = NULL) {
     stopifnot(is.function(filter))
     self$validate(filter)
     
@@ -204,7 +211,8 @@ IntervalDualTessellationCover$set(
 ## construct the nerve.
 ## neighborhood ----
 IntervalDualTessellationCover$set(
-  "public", "neighborhood", function(filter, k) {
+  which = "public", name = "neighborhood",
+  value = function(filter, k) {
     stopifnot(!is.null(private$.index_set))
     
     ## Take advantage of bipartite overlap structure; could even allow buffers
