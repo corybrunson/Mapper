@@ -9,8 +9,7 @@
 IntervalDualTessellationCover
 }
 \description{
-\code{\link{R6}} class representing an interval dual
-  tessellation cover.
+[R6] class representing an interval dual tessellation cover.
 }
 \details{
 A (regular) interval tessellation \eqn{T} of \eqn{Z} (the real line, or of a
@@ -23,29 +22,29 @@ of \eqn{T}. The union \eqn{C} of \eqn{T} and \eqn{T'} is an _interval dual
 tessellation cover_.
 
 An interval dual tessellation cover \eqn{C} is a special case of a
-\code{\link{FixedIntervalCover}}, for a 1-dimensional lens and with
-\code{percent_overlap = 50}. \eqn{C} is _gomic_ (a **g**eneric, **o**pen,
-**m**inimal, **i**nterval **c**over) in the sense of Carriere and Oudot
-(2016).
+`[FixedIntervalCover]`, for a 1-dimensional lens and with `percent_overlap =
+50`. \eqn{C} is _gomic_ (a **g**eneric, **o**pen, **m**inimal, **i**nterval
+**c**over) in the sense of Carriere and Oudot (2016).
 
 \eqn{C} has constant "depth", in the sense that every point in \eqn{Z} is a
 member of exactly two sets in \eqn{C}. As discussed by Carriere and Oudot,
 because the mapper construction collapses sets in the pullback cover to
-vertices of the nerve complex, only 1-dimensional features of an original
-point cloud \eqn{X} can be recovered from a one-dimensional lens
-\eqn{f:X->Z}. A cover of depth 2 is sufficient to recover these features, so
-no tessellation covers of greater depth are available.
+vertices of the nerve complex, only 1-dimensional features of a point cloud
+\eqn{X} can be recovered from a 1-dimensional lens \eqn{f:X->Z}. A cover of
+depth 2 is sufficient to recover these features, so no tessellation covers of
+greater depth are available.
 
-\code{IntervalDualTessellationCover} takes the extrema of \eqn{f(X)} to be
-the centers of the first set in \eqn{T} and of the last set in \eqn{T} (if
-\code{number_intervals} is even) or \eqn{T'} (if \code{number_intervals} is
-odd). Thus \code{number_intervals} must be at least 2.
+`IntervalDualTessellationCover` takes the center of \eqn{f(X)} to be the
+center of the overlap between a pair of intervals in \eqn{T} and in \eqn{T'}.
+Thus, the tessellations have negation symmetry and the same number of sets.
+When `width` is sufficiently large (twice the range of the data), the number
+of intervals is minimized at 2.
 }
 \section{Fields}{
 
 \describe{
-\item{\code{number_intervals}}{An integer. The number of bins used to cover \eqn{Z};
-must be at least 2.}
+\item{\code{width}}{A positive number. The width of each interval in the cover, as a
+fraction of the range of the lensed data.}
 }}
 
 \seealso{
