@@ -12,7 +12,7 @@ IntervalDualTessellationCover
 [R6] class representing an interval dual tessellation cover.
 }
 \details{
-A (regular) interval tessellation \eqn{T} of \eqn{Z} (the real line, or of a
+A (regular) interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
 segment of it) consists of intervals of fixed length, shared endpoints, and
 empty overlap. In order to completely partition \eqn{Z}, each interval is
 considered closed at one end and open at the other. (**NB:** This has not
@@ -37,8 +37,8 @@ greater depth are available.
 `IntervalDualTessellationCover` takes the center of \eqn{f(X)} to be the
 center of the overlap between a pair of intervals in \eqn{T} and in \eqn{T'}.
 Thus, the tessellations have negation symmetry and the same number of sets.
-When `width` is sufficiently large (twice the range of the data), the number
-of intervals is minimized at 2.
+When `width` is sufficiently large (twice the range of the data), the total
+number of intervals is minimized at 2.
 }
 \section{Fields}{
 

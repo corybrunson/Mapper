@@ -7,7 +7,7 @@
 
 #' @details
 #'
-#' A (regular) interval tessellation \eqn{T} of \eqn{Z} (the real line, or of a
+#' A (regular) interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
 #' segment of it) consists of intervals of fixed length, shared endpoints, and
 #' empty overlap. In order to completely partition \eqn{Z}, each interval is
 #' considered closed at one end and open at the other. (**NB:** This has not
@@ -32,8 +32,8 @@
 #' `IntervalDualTessellationCover` takes the center of \eqn{f(X)} to be the
 #' center of the overlap between a pair of intervals in \eqn{T} and in \eqn{T'}.
 #' Thus, the tessellations have negation symmetry and the same number of sets.
-#' When `width` is sufficiently large (twice the range of the data), the number
-#' of intervals is minimized at 2.
+#' When `width` is sufficiently large (twice the range of the data), the total
+#' number of intervals is minimized at 2.
 #' 
 
 #' @field width A positive number. The width of each interval in the cover, as a
@@ -65,6 +65,9 @@ IntervalDualTessellationCover$set(
     if (missing(value)) { private$.width } else {
       if (length(value) != 1) {
         stop("A tessellation cover takes only one `width` value.")
+      }
+      if (value <= 0) {
+        stop("The width of a tessellation must be positive.")
       }
       private$.width <- value
       self
@@ -98,7 +101,7 @@ IntervalDualTessellationCover$set(
       )
     }
     sprintf(
-      "%s Cover: (width = [%s])",
+      "%s Cover: (width = %s)",
       titlecase(private$.typename), self$width
     )
   }
@@ -112,21 +115,20 @@ IntervalDualTessellationCover$set(
     self$validate(filter)
     
     ## Get filter range and length
-    fv <- filter()
-    f_ran <- range(fv)
+    f_ran <- range(filter())
     f_len <- diff(f_ran)
     f_cent <- f_ran[1] + f_len/2
     
     ## Calculate hyper-parameters
     i_len <- self$width*f_len
-    a_lr <- c(ceiling(.5/self$width - .75), ceiling(.5/self$width - .25))
-
+    i_num <- c(ceiling(.5*f_len/i_len - .75), ceiling(.5*f_len/i_len - .25))
+    
     ## If no index is given, construct the entire cover
     if (missing(index) || is.null(index)) {
       ## primary tessellation endpoints
-      a_pts <- f_cent + (seq(-a_lr[1] - 1, a_lr[2]) + .25)*i_len
+      a_pts <- f_cent + (seq(-i_num[1] - 1, i_num[2]) + .25)*i_len
       ## secondary tessellation endpoints
-      b_pts <- f_cent + (seq(-a_lr[2], a_lr[1] + 1) - .25)*i_len
+      b_pts <- f_cent + (seq(-i_num[2], i_num[1] + 1) - .25)*i_len
       ## dual tessellation bounds
       ls_bounds <- cbind(
         c(a_pts[-length(a_pts)], b_pts[-length(b_pts)]),
@@ -134,12 +136,12 @@ IntervalDualTessellationCover$set(
       )
     } else {
       stopifnot(index %in% self$index_set)
-      s_dual <- match(substr(index, 2L, 2L), c("A", "B")) - 1L
-      s_order <- as.integer(sub("^\\([AB]: ([0-9]+)\\)$", "\\1", index))
+      s_dual <- as.logical(match(substr(index, 2L, 2L), c("A", "B")) - 1L)
+      s_order <- as.integer(sub("^\\([AB]: ([0-9\\-]+)\\)$", "\\1", index))
       ls_bounds <- f_cent + if (s_dual) {
-        (s_order - a_lr[2] - 1 - .25)*i_len
+        (s_order + c(0, 1) - .25)*i_len
       } else {
-        (s_order - a_lr[1] - 2 + .25)*i_len
+        (s_order + c(-1, 0) + .25)*i_len
       }
     }
     
@@ -152,14 +154,22 @@ IntervalDualTessellationCover$set(
 ## construct_index_set ----
 IntervalDualTessellationCover$set(
   which = "public", name = "construct_index_set",
-  value = function(...) {
+  value = function(fv) {
+    if (is.function(fv)) {
+      self$validate(fv)
+      fv <- fv()
+    }
+    
+    ## Get filter length
+    f_len <- diff(range(fv))
     
     ## Calculate hyper-parameters
-    a_tot <- ceiling(.5/self$width - .75) + 1 + ceiling(.5/self$width - .25)
+    i_len <- self$width*f_len
+    i_num <- c(ceiling(.5*f_len/i_len - .75), ceiling(.5*f_len/i_len - .25))
     
     ## Primary, then dual, indices
-    a_ind <- paste0("(A: ", 1:a_tot, ")", sep = "")
-    b_ind <- paste0("(B: ", 1:a_tot, ")", sep = "")
+    a_ind <- paste0("(A: ", seq(-i_num[1], i_num[2]), ")", sep = "")
+    b_ind <- paste0("(B: ", seq(-i_num[2], i_num[1]), ")", sep = "")
     
     self$index_set <- c(a_ind, b_ind)
   }
@@ -174,13 +184,11 @@ IntervalDualTessellationCover$set(
     stopifnot(is.function(filter))
     self$validate(filter)
     
-    ## Get filter range and length
+    ## Get filter
     fv <- filter()
-    f_ran <- range(fv)
-    f_len <- diff(f_ran)
     
     ## If the index set hasn't been made yet, construct it.
-    self$construct_index_set()
+    self$construct_index_set(fv)
     
     ## If no index specified, return the level sets either by construction
     if (missing(index) || is.null(index)) {
@@ -211,20 +219,21 @@ IntervalDualTessellationCover$set(
   value = function(filter, k) {
     stopifnot(!is.null(private$.index_set))
     
-    ## Take advantage of bipartite overlap structure; could even allow buffers
-    ## at endpoints and simply not calculate within-layer intersections
-    
     if (k == 1L) {
       
-      ## Calculate hyper-parameters
-      a_lr <- c(ceiling(.5/self$width - .75), ceiling(.5/self$width - .25))
-      a_tot <- 1 + sum(a_lr)
-      ab <- as.integer(a_lr[1] >= a_lr[2])
+      ## Get filter length
+      f_len <- diff(range(filter()))
       
-      ## Each set only overlaps with at most two sets in the dual layer
+      ## Calculate hyper-parameters
+      i_len <- self$width*f_len
+      i_num <- c(ceiling(.5*f_len/i_len - .75), ceiling(.5*f_len/i_len - .25))
+      i_tot <- 1 + sum(i_num)
+      ab <- as.integer(i_num[1] >= i_num[2])
+      
+      ## Each set only overlaps with at most two sets, all in the dual layer
       return(cbind(
-        rep(self$index_set[seq(a_tot)], c(2-ab, rep(2, a_tot-2), 1+ab)),
-        rep(self$index_set[a_tot + seq(a_tot)], c(1+ab, rep(2, a_tot-2), 2-ab))
+        rep(self$index_set[seq(i_tot)], c(2-ab, rep(2, i_tot-2), 1+ab)),
+        rep(self$index_set[i_tot + seq(i_tot)], c(1+ab, rep(2, i_tot-2), 2-ab))
       ))
       
     } else if (k > 1L) {
