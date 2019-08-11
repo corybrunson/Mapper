@@ -48,7 +48,8 @@ fraction of the range of the lensed data.}
 }}
 
 \seealso{
-Other cover: \code{\link{FixedIntervalCover}}
+Other cover: \code{\link{FixedIntervalCover}},
+  \code{\link{SquareDualTessellationCover}}
 }
 \author{
 Jason Cory Brunson
