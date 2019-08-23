@@ -7,27 +7,27 @@
 
 #' @details
 #'
-#' A (regular) interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
+#' The regular interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
 #' segment of it) consists of intervals of fixed length, shared endpoints, and
 #' empty overlap. In order to completely partition \eqn{Z}, each interval is
-#' considered closed at one end and open at the other. (**NB:** This has not
-#' been carefully implemented.) The dual \eqn{T'} of \eqn{T} is obtained by
-#' defining a new interval cover with endpoints at the centers of the intervals
-#' of \eqn{T}. The union \eqn{C} of \eqn{T} and \eqn{T'} is an _interval dual
-#' tessellation cover_.
+#' considered closed at one end and open at the other. (**This remains to be
+#' carefully implemented.**) The dual tessellation \eqn{T'} of \eqn{T} is
+#' obtained by taking the endpoints of the intervals at the centers of the
+#' intervals of \eqn{T}. The union \eqn{C} of \eqn{T} and \eqn{T'} is an
+#' _interval dual tessellation cover_.
 #'
 #' An interval dual tessellation cover \eqn{C} is a special case of a
 #' `[FixedIntervalCover]`, for a 1-dimensional lens and with `percent_overlap =
 #' 50`. \eqn{C} is _gomic_ (a **g**eneric, **o**pen, **m**inimal, **i**nterval
-#' **c**over) in the sense of Carriere and Oudot (2016).
-#'
-#' \eqn{C} has constant "depth", in the sense that every point in \eqn{Z} is a
-#' member of exactly two sets in \eqn{C}. As discussed by Carriere and Oudot,
-#' because the mapper construction collapses sets in the pullback cover to
-#' vertices of the nerve complex, only 1-dimensional features of a point cloud
-#' \eqn{X} can be recovered from a 1-dimensional lens \eqn{f:X->Z}. A cover of
-#' depth 2 is sufficient to recover these features, so no tessellation covers of
-#' greater depth are available.
+#' **c**over) in the sense of Carriere and Oudot (2016). \eqn{C} has constant
+#' "depth", in the sense that every point in \eqn{Z} is a member of exactly two
+#' sets in \eqn{C}. As discussed by Carriere and Oudot, because the mapper
+#' construction collapses sets in the pullback cover to vertices of the nerve
+#' complex, only 1-dimensional features of a point cloud \eqn{X} can be
+#' recovered from a 1-dimensional lens \eqn{f:X->Z}. A cover of depth 2 is
+#' sufficient to recover these features, so no tessellation covers of greater
+#' depth are available. Every non-empty intersection of cover sets has the same
+#' length.
 #'
 #' `IntervalDualTessellationCover` takes the center of \eqn{f(X)} to be the
 #' center of the overlap between a pair of intervals in \eqn{T} and in \eqn{T'}.
@@ -84,7 +84,7 @@ IntervalDualTessellationCover$set(
     stopifnot(length(self$width) == 1)
     f_dim <- ncol(filter())
     if (f_dim != 1) {
-      stop("An interval tessellation requires a 1-dimensional lens.")
+      stop("A linear tessellation requires a 1-dimensional lens.")
     }
   }
 )
@@ -125,6 +125,7 @@ IntervalDualTessellationCover$set(
     
     ## If no index is given, construct the entire cover
     if (missing(index) || is.null(index)) {
+      
       ## primary tessellation endpoints
       a_pts <- f_cent + (seq(-i_num[1] - 1, i_num[2]) + .25)*i_len
       ## secondary tessellation endpoints
@@ -134,8 +135,10 @@ IntervalDualTessellationCover$set(
         c(a_pts[-length(a_pts)], b_pts[-length(b_pts)]),
         c(a_pts[-1], b_pts[-1])
       )
+      
     } else {
       stopifnot(index %in% self$index_set)
+      
       s_dual <- as.logical(match(substr(index, 2L, 2L), c("A", "B")) - 1L)
       s_order <- as.integer(sub("^\\([AB]: ([0-9\\-]+)\\)$", "\\1", index))
       ls_bounds <- f_cent + if (s_dual) {
@@ -143,6 +146,7 @@ IntervalDualTessellationCover$set(
       } else {
         (s_order + c(-1, 0) + .25)*i_len
       }
+      
     }
     
     ## Return bounds
@@ -154,10 +158,12 @@ IntervalDualTessellationCover$set(
 ## construct_index_set ----
 IntervalDualTessellationCover$set(
   which = "public", name = "construct_index_set",
-  value = function(fv) {
-    if (is.function(fv)) {
-      self$validate(fv)
-      fv <- fv()
+  value = function(filter) {
+    if (is.function(filter)) {
+      self$validate(filter)
+      fv <- filter()
+    } else {
+      fv <- filter
     }
     
     ## Get filter length
@@ -167,7 +173,7 @@ IntervalDualTessellationCover$set(
     i_len <- self$width*f_len
     i_num <- c(ceiling(.5*f_len/i_len - .75), ceiling(.5*f_len/i_len - .25))
     
-    ## Primary, then dual, indices
+    ## Primary and dual indices have same counts
     a_ind <- paste0("(A: ", seq(-i_num[1], i_num[2]), ")", sep = "")
     b_ind <- paste0("(B: ", seq(-i_num[2], i_num[1]), ")", sep = "")
     
@@ -187,22 +193,28 @@ IntervalDualTessellationCover$set(
     ## Get filter
     fv <- filter()
     
-    ## If the index set hasn't been made yet, construct it.
+    ## If the index set hasn't been made yet, construct it
     self$construct_index_set(fv)
     
     ## If no index specified, return the level sets either by construction
     if (missing(index) || is.null(index)) {
-      stopifnot(! index %in% self$index_set)
+      #stopifnot(! index %in% self$index_set)
+      
       set_bnds <- self$interval_bounds(filter)
+      
       self$level_sets <- constructIsoAlignedLevelSets(fv, as.matrix(set_bnds))
-      return(invisible(self)) ## return invisibly 
+      return(invisible(self))
     } else {
+      
       if (! is.null(self$level_sets) && index %in% names(self$level_sets)) {
+        
         return(self$level_sets[[index]])
       } else {
+        
         p_idx <- which(index == self$index_set)
         set_bnds <- self$interval_bounds(filter, index)
         level_set <- constructIsoAlignedLevelSets(fv, set_bnds)
+        
         return(level_set)
       }
     }

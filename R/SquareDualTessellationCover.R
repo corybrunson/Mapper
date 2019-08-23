@@ -7,32 +7,30 @@
 
 #' @details
 #'
-#' A (regular) tessellation \eqn{T} of \eqn{Z} (the plane, or )
-#'
-#' A (regular) square tessellation \eqn{T} of \eqn{Z} (the real line, or a
-#' path-connected region of it) consists of squares of fixed side length
-#' arranged as tiles, with shared vertices and edges and empty overlap. In order
-#' to completely partition \eqn{Z}, each square is considered closed along half
-#' of its perimeter and open along the other half. (**NB:** This has not been
-#' carefully implemented.) The dual \eqn{T'} of \eqn{T} is obtained by defining
-#' a new square cover with vertices at the centroids of the squares of \eqn{T}
-#' and edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
+#' The regular square tessellation \eqn{T} of \eqn{Z} (the plane, or a
+#' path-connected region of it; Schlafli symbol \eqn{{4,4}}) consists of
+#' congruent squares arranged as tiles, with shared vertices and edges and empty
+#' overlap. In order to completely partition \eqn{Z}, each square is considered
+#' closed along half of its perimeter and open along the other half. (**This
+#' remains to be carefully implemented.**) The dual \eqn{T'} of \eqn{T} is
+#' obtained by taking vertices at the centroids of the tiles of \eqn{T} and
+#' edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
 #' \eqn{T'} is a _square dual tessellation cover_.
 #'
 #' A square dual tessellation cover \eqn{C} is the union of two
 #' `[FixedIntervalCover]`s, for a 2-dimensional lens and with the same uniform
 #' `number_intervals` and  `percent_overlap = 0`, each offset from the other by
-#' half of the side length along each dimension.
-#'
-#' \eqn{C} has constant "depth", in the sense that every point in \eqn{Z} is a
-#' member of exactly two sets in \eqn{C}. A cover of depth 2 is only sufficient
-#' to recover 1-dimensional features of a point cloud.
+#' half of the side length along each dimension. \eqn{C} has constant "depth",
+#' in the sense that every point in \eqn{Z} is a member of exactly two sets in
+#' \eqn{C}. A cover of depth 2 is only sufficient to recover 1-dimensional
+#' features of a point cloud. Every non-empty intersection of cover sets is
+#' congruent up to boundary.
 #'
 #' `SquareDualTessellationCover` takes the centroid of \eqn{f(X)} to be the
-#' centroid of the overlap between a pair of squares in \eqn{T} and in \eqn{T'}.
+#' centroid of the overlap between a pair of tiles in \eqn{T} and in \eqn{T'}.
 #' Thus, the tessellations have rotation symmetry and the same number of sets
 #' (before dropping empty sets). When `width` is sufficiently large (twice the
-#' range of the data), the total number of squares is minimized at 2.
+#' range of the data), the total number of tiles is minimized at 2.
 #' 
 
 #' @field width A positive number. The side length of each square in the cover,
@@ -79,7 +77,7 @@ SquareDualTessellationCover$set(
     stopifnot(length(self$width) == 1)
     f_dim <- ncol(filter())
     if (f_dim != 2) {
-      stop("A square tessellation requires a 2-dimensional lens.")
+      stop("A planar tessellation requires a 2-dimensional lens.")
     }
   }
 )
@@ -141,8 +139,10 @@ SquareDualTessellationCover$set(
       
       ## dual tessellation bounds
       ls_bounds <- rbind(a_bounds, b_bounds)
+      
     } else {
       stopifnot(index %in% self$index_set)
+      
       s_dual <- as.logical(match(substr(index, 2L, 2L), c("A", "B")) - 1L)
       s_order <- as.integer(strsplit(
         sub("^\\([AB]: ([0-9,\\-]+)\\)$", "\\1", index),
@@ -153,6 +153,7 @@ SquareDualTessellationCover$set(
       } else {
         (s_order + c(-1, -1, 0, 0) + .25)*i_len
       }
+      
     }
     
     ## Return bounds
@@ -162,13 +163,15 @@ SquareDualTessellationCover$set(
 
 SquareDualTessellationCover$set(
   which = "public", name = "construct_index_set",
-  value = function(fv) {
-    if (is.function(fv)) {
-      self$validate(fv)
-      fv <- fv()
+  value = function(filter) {
+    if (is.function(filter)) {
+      self$validate(filter)
+      fv <- filter()
+    } else {
+      fv <- filter
     }
     
-    ## Get filter length
+    ## Get filter lengths
     f_len <- diff(apply(fv, 2, range))
     
     ## Calculate hyper-parameters
@@ -178,7 +181,7 @@ SquareDualTessellationCover$set(
       ceiling(.5*f_len/i_len - .25)
     )
     
-    ## Primary, then dual, indices
+    ## Primary and dual indices have same dimensions
     i_rc <- as.vector(t(outer(
       seq(-i_num[1, 1], i_num[2, 1]),
       seq(-i_num[1, 2], i_num[2, 2]),
@@ -201,22 +204,28 @@ SquareDualTessellationCover$set(
     ## Get filter
     fv <- filter()
     
-    ## If the index set hasn't been made yet, construct it.
+    ## If the index set hasn't been made yet, construct it
     self$construct_index_set(fv)
     
     ## If no index specified, return the level sets either by construction
     if (missing(index) || is.null(index)) {
-      stopifnot(! index %in% self$index_set)
+      #stopifnot(! index %in% self$index_set)
+      
       set_bnds <- self$interval_bounds(filter)
+      
       self$level_sets <- constructIsoAlignedLevelSets(fv, as.matrix(set_bnds))
-      return(invisible(self)) ## return invisibly 
+      return(invisible(self))
     } else {
+      
       if (! is.null(self$level_sets) && index %in% names(self$level_sets)) {
+        
         return(self$level_sets[[index]])
       } else {
+        
         p_idx <- which(index == self$index_set)
         set_bnds <- self$interval_bounds(filter, index)
         level_set <- constructIsoAlignedLevelSets(fv, set_bnds)
+        
         return(level_set)
       }
     }

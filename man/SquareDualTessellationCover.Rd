@@ -12,32 +12,30 @@ SquareDualTessellationCover
 [R6] class representing a square dual tessellation cover.
 }
 \details{
-A (regular) tessellation \eqn{T} of \eqn{Z} (the plane, or )
-
-A (regular) square tessellation \eqn{T} of \eqn{Z} (the real line, or a
-path-connected region of it) consists of squares of fixed side length
-arranged as tiles, with shared vertices and edges and empty overlap. In order
-to completely partition \eqn{Z}, each square is considered closed along half
-of its perimeter and open along the other half. (**NB:** This has not been
-carefully implemented.) The dual \eqn{T'} of \eqn{T} is obtained by defining
-a new square cover with vertices at the centroids of the squares of \eqn{T}
-and edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
+The regular square tessellation \eqn{T} of \eqn{Z} (the plane, or a
+path-connected region of it; Schlafli symbol \eqn{{4,4}}) consists of
+congruent squares arranged as tiles, with shared vertices and edges and empty
+overlap. In order to completely partition \eqn{Z}, each square is considered
+closed along half of its perimeter and open along the other half. (**This
+remains to be carefully implemented.**) The dual \eqn{T'} of \eqn{T} is
+obtained by taking vertices at the centroids of the tiles of \eqn{T} and
+edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
 \eqn{T'} is a _square dual tessellation cover_.
 
 A square dual tessellation cover \eqn{C} is the union of two
 `[FixedIntervalCover]`s, for a 2-dimensional lens and with the same uniform
 `number_intervals` and  `percent_overlap = 0`, each offset from the other by
-half of the side length along each dimension.
-
-\eqn{C} has constant "depth", in the sense that every point in \eqn{Z} is a
-member of exactly two sets in \eqn{C}. A cover of depth 2 is only sufficient
-to recover 1-dimensional features of a point cloud.
+half of the side length along each dimension. \eqn{C} has constant "depth",
+in the sense that every point in \eqn{Z} is a member of exactly two sets in
+\eqn{C}. A cover of depth 2 is only sufficient to recover 1-dimensional
+features of a point cloud. Every non-empty intersection of cover sets is
+congruent up to boundary.
 
 `SquareDualTessellationCover` takes the centroid of \eqn{f(X)} to be the
-centroid of the overlap between a pair of squares in \eqn{T} and in \eqn{T'}.
+centroid of the overlap between a pair of tiles in \eqn{T} and in \eqn{T'}.
 Thus, the tessellations have rotation symmetry and the same number of sets
 (before dropping empty sets). When `width` is sufficiently large (twice the
-range of the data), the total number of squares is minimized at 2.
+range of the data), the total number of tiles is minimized at 2.
 }
 \section{Fields}{
 
@@ -48,7 +46,8 @@ as a fraction of the larger coordinate range of the lensed data.}
 
 \seealso{
 Other cover: \code{\link{FixedIntervalCover}},
-  \code{\link{IntervalDualTessellationCover}}
+  \code{\link{IntervalDualTessellationCover}},
+  \code{\link{TriangleDualTessellationCover}}
 }
 \author{
 Jason Cory Brunson

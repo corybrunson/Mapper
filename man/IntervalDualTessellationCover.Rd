@@ -12,27 +12,27 @@ IntervalDualTessellationCover
 [R6] class representing an interval dual tessellation cover.
 }
 \details{
-A (regular) interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
+The regular interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
 segment of it) consists of intervals of fixed length, shared endpoints, and
 empty overlap. In order to completely partition \eqn{Z}, each interval is
-considered closed at one end and open at the other. (**NB:** This has not
-been carefully implemented.) The dual \eqn{T'} of \eqn{T} is obtained by
-defining a new interval cover with endpoints at the centers of the intervals
-of \eqn{T}. The union \eqn{C} of \eqn{T} and \eqn{T'} is an _interval dual
-tessellation cover_.
+considered closed at one end and open at the other. (**This remains to be
+carefully implemented.**) The dual tessellation \eqn{T'} of \eqn{T} is
+obtained by taking the endpoints of the intervals at the centers of the
+intervals of \eqn{T}. The union \eqn{C} of \eqn{T} and \eqn{T'} is an
+_interval dual tessellation cover_.
 
 An interval dual tessellation cover \eqn{C} is a special case of a
 `[FixedIntervalCover]`, for a 1-dimensional lens and with `percent_overlap =
 50`. \eqn{C} is _gomic_ (a **g**eneric, **o**pen, **m**inimal, **i**nterval
-**c**over) in the sense of Carriere and Oudot (2016).
-
-\eqn{C} has constant "depth", in the sense that every point in \eqn{Z} is a
-member of exactly two sets in \eqn{C}. As discussed by Carriere and Oudot,
-because the mapper construction collapses sets in the pullback cover to
-vertices of the nerve complex, only 1-dimensional features of a point cloud
-\eqn{X} can be recovered from a 1-dimensional lens \eqn{f:X->Z}. A cover of
-depth 2 is sufficient to recover these features, so no tessellation covers of
-greater depth are available.
+**c**over) in the sense of Carriere and Oudot (2016). \eqn{C} has constant
+"depth", in the sense that every point in \eqn{Z} is a member of exactly two
+sets in \eqn{C}. As discussed by Carriere and Oudot, because the mapper
+construction collapses sets in the pullback cover to vertices of the nerve
+complex, only 1-dimensional features of a point cloud \eqn{X} can be
+recovered from a 1-dimensional lens \eqn{f:X->Z}. A cover of depth 2 is
+sufficient to recover these features, so no tessellation covers of greater
+depth are available. Every non-empty intersection of cover sets has the same
+length.
 
 `IntervalDualTessellationCover` takes the center of \eqn{f(X)} to be the
 center of the overlap between a pair of intervals in \eqn{T} and in \eqn{T'}.
@@ -49,7 +49,8 @@ fraction of the range of the lensed data.}
 
 \seealso{
 Other cover: \code{\link{FixedIntervalCover}},
-  \code{\link{SquareDualTessellationCover}}
+  \code{\link{SquareDualTessellationCover}},
+  \code{\link{TriangleDualTessellationCover}}
 }
 \author{
 Jason Cory Brunson

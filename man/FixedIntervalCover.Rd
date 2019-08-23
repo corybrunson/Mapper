@@ -30,7 +30,8 @@ The mapper corresponding to this cover may be thought of as a relaxed Reeb graph
 
 \seealso{
 Other cover: \code{\link{IntervalDualTessellationCover}},
-  \code{\link{SquareDualTessellationCover}}
+  \code{\link{SquareDualTessellationCover}},
+  \code{\link{TriangleDualTessellationCover}}
 }
 \author{
 Matt Piekenbrock
