@@ -156,8 +156,7 @@ TriangleDualTessellationCover$set(
     
     ## Calculate hyper-parameters
     y_bar <- (1/9 - 1/16) / sqrt(3) / (1/3 - 1/4) # origin overlap centroid
-    s_len <- f_len[1]*self$width + # triangle side length
-      sqrt(.Machine$double.eps) # ensure each point is covered
+    s_len <- f_len[1]*self$width # triangle side length
     d_hts <- f_len[2] / s_len / sqrt(3) # number of triangle heights in data/2
     tri_num <- ceiling(cbind(
       # numbers of triangles on each side of origin triangle
@@ -237,8 +236,7 @@ TriangleDualTessellationCover$set(
     
     ## Calculate hyper-parameters
     y_bar <- (1/9 - 1/16) / sqrt(3) / (1/3 - 1/4) # origin overlap centroid
-    s_len <- f_len[1]*self$width + # triangle side length
-      sqrt(.Machine$double.eps) # ensure each point is covered
+    s_len <- f_len[1]*self$width # triangle side length
     d_hts <- f_len[2] / s_len / sqrt(3) # number of triangle heights in data/2
     tri_num <- ceiling(cbind(
       # numbers of triangles on each side of origin triangle
@@ -279,7 +277,7 @@ TriangleDualTessellationCover$set(
     ## Calculate hyper-parameters
     y_bar <- (1/9 - 1/16) / sqrt(3) / (1/3 - 1/4) # origin overlap centroid
     s_len <- f_len[1]*self$width + # triangle side length
-      sqrt(.Machine$double.eps) # ensure each point is covered
+      sqrt(.Machine$double.eps) # ensure all lensed points are covered
     
     ## If the index set hasn't been made yet, construct it
     self$construct_index_set(fv)
@@ -361,8 +359,7 @@ TriangleDualTessellationCover$set(
       
       ## Calculate hyper-parameters
       y_bar <- (1/9 - 1/16) / sqrt(3) / (1/3 - 1/4) # origin overlap centroid
-      s_len <- f_len[1]*self$width + # triangle side length
-        sqrt(.Machine$double.eps) # ensure each point is covered
+      s_len <- f_len[1]*self$width # triangle side length
       d_hts <- f_len[2] / s_len / sqrt(3) # number of triangle heights in data/2
       tri_num <- ceiling(cbind(
         # numbers of triangles on each side of origin triangle
@@ -388,8 +385,8 @@ TriangleDualTessellationCover$set(
         x = b_xy[, 1] + rep(seq(-1, 1), each = 2),
         y = b_xy[, 2] + rep(seq(0, 1), times = 3)
       )
-      w_xy <- which(a_xy[, 1] >= tri_ran[1, 1] & a_xy[, 1] <= tri_ran[2, 1],
-                    a_xy[, 2] >= tri_ran[1, 2] & a_xy[, 2] <= tri_ran[2, 2])
+      w_xy <- which(a_xy[, 1] >= tri_ran[1, 1] & a_xy[, 1] <= tri_ran[2, 1] &
+                      a_xy[, 2] >= tri_ran[1, 2] & a_xy[, 2] <= tri_ran[2, 2])
       ab_xy <- matrix(paste("(", c("A", "B"), ": ", rbind(
         apply(a_xy[w_xy, , drop = FALSE], 1, paste, collapse = ","),
         apply(b_xy[w_xy, , drop = FALSE], 1, paste, collapse = ",")
