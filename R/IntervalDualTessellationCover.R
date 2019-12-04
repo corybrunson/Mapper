@@ -10,11 +10,10 @@
 #' The regular interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
 #' segment of it) consists of intervals of fixed length, shared endpoints, and
 #' empty overlap. In order to completely partition \eqn{Z}, each interval is
-#' considered closed at one end and open at the other. (**This remains to be
-#' carefully implemented.**) The dual tessellation \eqn{T'} of \eqn{T} is
-#' obtained by taking the endpoints of the intervals at the centers of the
-#' intervals of \eqn{T}. The union \eqn{C} of \eqn{T} and \eqn{T'} is an
-#' _interval dual tessellation cover_.
+#' considered closed at one end and open at the other. The dual tessellation
+#' \eqn{T'} of \eqn{T} is obtained by taking the endpoints of the intervals at
+#' the centers of the intervals of \eqn{T}. The union \eqn{C} of \eqn{T} and
+#' \eqn{T'} is an _interval dual tessellation cover_.
 #'
 #' An interval dual tessellation cover \eqn{C} is a special case of a
 #' `[FixedIntervalCover]`, for a 1-dimensional lens and with `percent_overlap =
@@ -114,12 +113,12 @@ IntervalDualTessellationCover$set(
   value = function(filter, index = NULL) {
     self$validate(filter)
     
-    ## Get filter range and length
+    ## Calculate filter summary statistics
     f_ran <- range(filter())
     f_len <- diff(f_ran)
     f_cent <- f_ran[1] + f_len/2
     
-    ## Calculate hyper-parameters
+    ## Calculate additional hyper-parameters
     i_len <- self$width*f_len
     i_num <- c(ceiling(.5*f_len/i_len - .75), ceiling(.5*f_len/i_len - .25))
     
@@ -166,14 +165,16 @@ IntervalDualTessellationCover$set(
       fv <- filter
     }
     
-    ## Get filter length
+    ## Calculate filter summary statistics
     f_len <- diff(range(fv))
     
-    ## Calculate hyper-parameters
-    i_len <- self$width*f_len
+    ## Calculate additional hyper-parameters
+    i_len <- self$width*f_len +
+      # ensure all lensed points are covered
+      sqrt(.Machine$double.eps)
     i_num <- c(ceiling(.5*f_len/i_len - .75), ceiling(.5*f_len/i_len - .25))
     
-    ## Primary and dual indices have same counts
+    ## Primary and dual indices have same counts, dually oriented
     a_ind <- paste0("(A: ", seq(-i_num[1], i_num[2]), ")", sep = "")
     b_ind <- paste0("(B: ", seq(-i_num[2], i_num[1]), ")", sep = "")
     
@@ -181,8 +182,8 @@ IntervalDualTessellationCover$set(
   }
 )
 
-## Given the current set of parameter values, construct the level sets whose
-## union covers the filter space
+## Given the current set of parameter values,
+## construct the level sets whose union covers the filter space
 ## construct_cover ----
 IntervalDualTessellationCover$set(
   which = "public", name = "construct_cover",
@@ -202,7 +203,19 @@ IntervalDualTessellationCover$set(
       
       set_bnds <- self$interval_bounds(filter)
       
-      self$level_sets <- constructIsoAlignedLevelSets(fv, as.matrix(set_bnds))
+      ## Calculate level sets (with intervals closed below and open above)
+      d <- ncol(set_bnds) / 2
+      self$level_sets <- apply(set_bnds, 1, function(b) {
+        s <- which(apply(
+          sweep(fv, 2, b[seq(d)], ">=") & sweep(fv, 2, b[d +seq(d)], "<"),
+          1, all
+        ))
+        structure(s, bounds = b)
+      })
+      
+      ## Calculate level sets (with intervals closed at each end)
+      #self$level_sets <- constructIsoAlignedLevelSets(fv, as.matrix(set_bnds))
+      
       return(invisible(self))
     } else {
       
@@ -213,7 +226,19 @@ IntervalDualTessellationCover$set(
         
         p_idx <- which(index == self$index_set)
         set_bnds <- self$interval_bounds(filter, index)
-        level_set <- constructIsoAlignedLevelSets(fv, set_bnds)
+        
+        ## Calculate level sets (with intervals closed below and open above)
+        d <- ncol(set_bnds) / 2
+        level_set <- apply(set_bnds, 1, function(b) {
+          s <- which(apply(
+            sweep(fv, 2, b[seq(d)], ">=") & sweep(fv, 2, b[d +seq(d)], "<"),
+            1, all
+          ))
+          structure(s, bounds = b)
+        })
+        
+        ## Calculate level sets (with intervals closed at each end)
+        #level_set <- constructIsoAlignedLevelSets(fv, set_bnds)
         
         return(level_set)
       }

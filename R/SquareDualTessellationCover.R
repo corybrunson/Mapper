@@ -11,11 +11,10 @@
 #' path-connected region of it; Schlafli symbol \eqn{{4,4}}) consists of
 #' congruent squares arranged as tiles, with shared vertices and edges and empty
 #' overlap. In order to completely partition \eqn{Z}, each square is considered
-#' closed along half of its perimeter and open along the other half. (**This
-#' remains to be carefully implemented.**) The dual \eqn{T'} of \eqn{T} is
-#' obtained by taking vertices at the centroids of the tiles of \eqn{T} and
-#' edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
-#' \eqn{T'} is a _square dual tessellation cover_.
+#' closed along half of its perimeter and open along the other half. The dual
+#' \eqn{T'} of \eqn{T} is obtained by taking vertices at the centroids of the
+#' tiles of \eqn{T} and edges perpendicular to those of \eqn{T}. The union
+#' \eqn{C} of \eqn{T} and \eqn{T'} is a _square dual tessellation cover_.
 #'
 #' A square dual tessellation cover \eqn{C} is the union of two
 #' `[FixedIntervalCover]`s, for a 2-dimensional lens and with the same uniform
@@ -104,14 +103,16 @@ SquareDualTessellationCover$set(
   value = function(filter, index = NULL) {
     self$validate(filter)
     
-    ## Get filter range and length
+    ## Calculate filter and summary statistics
     fv <- filter()
     f_ran <- apply(fv, 2, range)
     f_len <- diff(f_ran)
     f_cent <- f_ran[1, ] + f_len/2
     
     ## Calculate hyper-parameters
-    i_len <- self$width*max(f_len)
+    i_len <- self$width*max(f_len) +
+      # ensure all lensed points are covered
+      sqrt(.Machine$double.eps)
     i_num <- rbind(
       ceiling(.5*f_len/i_len - .75),
       ceiling(.5*f_len/i_len - .25)
@@ -171,10 +172,10 @@ SquareDualTessellationCover$set(
       fv <- filter
     }
     
-    ## Get filter lengths
+    ## Calculate filter summary statistics
     f_len <- diff(apply(fv, 2, range))
     
-    ## Calculate hyper-parameters
+    ## Calculate additional hyper-parameters
     i_len <- self$width*max(f_len)
     i_num <- rbind(
       ceiling(.5*f_len/i_len - .75),
@@ -213,7 +214,19 @@ SquareDualTessellationCover$set(
       
       set_bnds <- self$interval_bounds(filter)
       
-      self$level_sets <- constructIsoAlignedLevelSets(fv, as.matrix(set_bnds))
+      ## Calculate level sets (with intervals closed below and open above)
+      d <- ncol(set_bnds) / 2
+      self$level_sets <- apply(set_bnds, 1, function(b) {
+        s <- which(apply(
+          sweep(fv, 2, b[seq(d)], ">=") & sweep(fv, 2, b[d +seq(d)], "<"),
+          1, all
+        ))
+        structure(s, bounds = b)
+      })
+      
+      ## Calculate level sets (with squares closed along entire perimeter)
+      #self$level_sets <- constructIsoAlignedLevelSets(fv, as.matrix(set_bnds))
+      
       return(invisible(self))
     } else {
       
@@ -224,7 +237,19 @@ SquareDualTessellationCover$set(
         
         p_idx <- which(index == self$index_set)
         set_bnds <- self$interval_bounds(filter, index)
-        level_set <- constructIsoAlignedLevelSets(fv, set_bnds)
+        
+        ## Calculate level sets (with intervals closed below and open above)
+        d <- ncol(set_bnds) / 2
+        level_set <- apply(set_bnds, 1, function(b) {
+          s <- which(apply(
+            sweep(fv, 2, b[seq(d)], ">=") & sweep(fv, 2, b[d +seq(d)], "<"),
+            1, all
+          ))
+          structure(s, bounds = b)
+        })
+        
+        ## Calculate level sets (with squares closed along entire perimeter)
+        #level_set <- constructIsoAlignedLevelSets(fv, set_bnds)
         
         return(level_set)
       }

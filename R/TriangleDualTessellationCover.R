@@ -13,11 +13,11 @@
 #' congruent equiangular triangles arranged as tiles, with shared vertices and
 #' edges and empty overlap. In order to completely partition \eqn{Z}, each
 #' triangle is considered closed along part of its perimeter and open along the
-#' remainder. (**This remains to be carefully implemented.**) The dual \eqn{T'}
-#' of \eqn{T} (the regular hexagonal tessellation; Schlafli symbol \eqn{6,3}) is
-#' obtained by taking vertices at the centroids of the tiles of \eqn{T} and
-#' edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
-#' \eqn{T'} is a _triangle--hexagon dual tessellation cover_.
+#' remainder. The dual \eqn{T'} of \eqn{T} (the regular hexagonal tessellation;
+#' Schlafli symbol \eqn{6,3}) is obtained by taking vertices at the centroids of
+#' the tiles of \eqn{T} and edges perpendicular to those of \eqn{T}. The union
+#' \eqn{C} of \eqn{T} and \eqn{T'} is a _triangle--hexagon dual tessellation
+#' cover_.
 #'
 #' A triangle--hexagon dual tessellation cover \eqn{C} has constant "depth", in
 #' the sense that every point in \eqn{Z} is a member of exactly two sets in
@@ -262,22 +262,28 @@ TriangleDualTessellationCover$set(
   }
 )
 
+## Given the current set of parameter values,
+## construct the level sets whose union covers the filter space,
+## such that every point lies in exactly one set of each tessellation
 TriangleDualTessellationCover$set(
   which = "public", name = "construct_cover",
   value = function(filter, index = NULL) {
     stopifnot(is.function(filter))
     self$validate(filter)
     
-    ## Get filter
+    ## Calculate filter and summary statistics
     fv <- filter()
     f_ran <- apply(fv, 2, range)
     f_len <- diff(f_ran)
     f_cent <- f_ran[1, ] + f_len/2
     
-    ## Calculate hyper-parameters
+    ## Calculate additional hyper-parameters
     y_bar <- (1/9 - 1/16) / sqrt(3) / (1/3 - 1/4) # origin overlap centroid
-    s_len <- f_len[1]*self$width + # triangle side length
-      sqrt(.Machine$double.eps) # ensure all lensed points are covered
+    s_len <-
+      # triangle side length
+      f_len[1]*self$width +
+      # ensure all lensed points are covered
+      sqrt(.Machine$double.eps)
     
     ## If the index set hasn't been made yet, construct it
     self$construct_index_set(fv)

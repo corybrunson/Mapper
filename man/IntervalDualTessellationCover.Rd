@@ -4,10 +4,6 @@
 \name{IntervalDualTessellationCover}
 \alias{IntervalDualTessellationCover}
 \title{Interval Dual Tessellation Cover}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
-\usage{
-IntervalDualTessellationCover
-}
 \description{
 [R6] class representing an interval dual tessellation cover.
 }
@@ -15,11 +11,10 @@ IntervalDualTessellationCover
 The regular interval tessellation \eqn{T} of \eqn{Z} (the real line, or a
 segment of it) consists of intervals of fixed length, shared endpoints, and
 empty overlap. In order to completely partition \eqn{Z}, each interval is
-considered closed at one end and open at the other. (**This remains to be
-carefully implemented.**) The dual tessellation \eqn{T'} of \eqn{T} is
-obtained by taking the endpoints of the intervals at the centers of the
-intervals of \eqn{T}. The union \eqn{C} of \eqn{T} and \eqn{T'} is an
-_interval dual tessellation cover_.
+considered closed at one end and open at the other. The dual tessellation
+\eqn{T'} of \eqn{T} is obtained by taking the endpoints of the intervals at
+the centers of the intervals of \eqn{T}. The union \eqn{C} of \eqn{T} and
+\eqn{T'} is an _interval dual tessellation cover_.
 
 An interval dual tessellation cover \eqn{C} is a special case of a
 `[FixedIntervalCover]`, for a 1-dimensional lens and with `percent_overlap =
@@ -40,20 +35,116 @@ Thus, the tessellations have negation symmetry and the same number of sets.
 When `width` is sufficiently large (twice the range of the data), the total
 number of intervals is minimized at 2.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{width}}{A positive number. The width of each interval in the cover, as a
-fraction of the range of the lensed data.}
-}}
-
 \seealso{
-Other cover: \code{\link{FixedIntervalCover}},
-  \code{\link{SquareDualTessellationCover}},
-  \code{\link{TriangleDualTessellationCover}}
+Other cover: 
+\code{\link{FixedIntervalCover}},
+\code{\link{SquareDualTessellationCover}},
+\code{\link{TriangleDualTessellationCover}}
 }
 \author{
 Jason Cory Brunson
 }
 \concept{cover}
-\keyword{datasets}
+\section{Super class}{
+\code{\link[Mapper:CoverRef]{Mapper::CoverRef}} -> \code{IntervalDualTessellationCover}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{width}}{A positive number. The width of each interval in the cover, as a
+fraction of the range of the lensed data.}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{IntervalDualTessellationCover$new()}}
+\item \href{#method-validate}{\code{IntervalDualTessellationCover$validate()}}
+\item \href{#method-format}{\code{IntervalDualTessellationCover$format()}}
+\item \href{#method-interval_bounds}{\code{IntervalDualTessellationCover$interval_bounds()}}
+\item \href{#method-construct_index_set}{\code{IntervalDualTessellationCover$construct_index_set()}}
+\item \href{#method-construct_cover}{\code{IntervalDualTessellationCover$construct_cover()}}
+\item \href{#method-neighborhood}{\code{IntervalDualTessellationCover$neighborhood()}}
+\item \href{#method-clone}{\code{IntervalDualTessellationCover$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$new(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-validate"></a>}}
+\subsection{Method \code{validate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$validate(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\subsection{Method \code{format()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$format(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-interval_bounds"></a>}}
+\subsection{Method \code{interval_bounds()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$interval_bounds(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_index_set"></a>}}
+\subsection{Method \code{construct_index_set()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$construct_index_set(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_cover"></a>}}
+\subsection{Method \code{construct_cover()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$construct_cover(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-neighborhood"></a>}}
+\subsection{Method \code{neighborhood()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$neighborhood(filter, k)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{IntervalDualTessellationCover$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

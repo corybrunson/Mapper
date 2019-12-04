@@ -4,10 +4,6 @@
 \name{SquareDualTessellationCover}
 \alias{SquareDualTessellationCover}
 \title{Square Dual Tesselation Cover}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
-\usage{
-SquareDualTessellationCover
-}
 \description{
 [R6] class representing a square dual tessellation cover.
 }
@@ -16,11 +12,10 @@ The regular square tessellation \eqn{T} of \eqn{Z} (the plane, or a
 path-connected region of it; Schlafli symbol \eqn{{4,4}}) consists of
 congruent squares arranged as tiles, with shared vertices and edges and empty
 overlap. In order to completely partition \eqn{Z}, each square is considered
-closed along half of its perimeter and open along the other half. (**This
-remains to be carefully implemented.**) The dual \eqn{T'} of \eqn{T} is
-obtained by taking vertices at the centroids of the tiles of \eqn{T} and
-edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
-\eqn{T'} is a _square dual tessellation cover_.
+closed along half of its perimeter and open along the other half. The dual
+\eqn{T'} of \eqn{T} is obtained by taking vertices at the centroids of the
+tiles of \eqn{T} and edges perpendicular to those of \eqn{T}. The union
+\eqn{C} of \eqn{T} and \eqn{T'} is a _square dual tessellation cover_.
 
 A square dual tessellation cover \eqn{C} is the union of two
 `[FixedIntervalCover]`s, for a 2-dimensional lens and with the same uniform
@@ -37,20 +32,116 @@ Thus, the tessellations have rotation symmetry and the same number of sets
 (before dropping empty sets). When `width` is sufficiently large (twice the
 range of the data), the total number of tiles is minimized at 2.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{width}}{A positive number. The side length of each square in the cover,
-as a fraction of the larger coordinate range of the lensed data.}
-}}
-
 \seealso{
-Other cover: \code{\link{FixedIntervalCover}},
-  \code{\link{IntervalDualTessellationCover}},
-  \code{\link{TriangleDualTessellationCover}}
+Other cover: 
+\code{\link{FixedIntervalCover}},
+\code{\link{IntervalDualTessellationCover}},
+\code{\link{TriangleDualTessellationCover}}
 }
 \author{
 Jason Cory Brunson
 }
 \concept{cover}
-\keyword{datasets}
+\section{Super class}{
+\code{\link[Mapper:CoverRef]{Mapper::CoverRef}} -> \code{SquareDualTessellationCover}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{width}}{A positive number. The side length of each square in the cover,
+as a fraction of the larger coordinate range of the lensed data.}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{SquareDualTessellationCover$new()}}
+\item \href{#method-validate}{\code{SquareDualTessellationCover$validate()}}
+\item \href{#method-format}{\code{SquareDualTessellationCover$format()}}
+\item \href{#method-interval_bounds}{\code{SquareDualTessellationCover$interval_bounds()}}
+\item \href{#method-construct_index_set}{\code{SquareDualTessellationCover$construct_index_set()}}
+\item \href{#method-construct_cover}{\code{SquareDualTessellationCover$construct_cover()}}
+\item \href{#method-neighborhood}{\code{SquareDualTessellationCover$neighborhood()}}
+\item \href{#method-clone}{\code{SquareDualTessellationCover$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$new(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-validate"></a>}}
+\subsection{Method \code{validate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$validate(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\subsection{Method \code{format()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$format(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-interval_bounds"></a>}}
+\subsection{Method \code{interval_bounds()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$interval_bounds(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_index_set"></a>}}
+\subsection{Method \code{construct_index_set()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$construct_index_set(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_cover"></a>}}
+\subsection{Method \code{construct_cover()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$construct_cover(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-neighborhood"></a>}}
+\subsection{Method \code{neighborhood()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$neighborhood(filter, k)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SquareDualTessellationCover$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

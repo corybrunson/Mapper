@@ -4,10 +4,6 @@
 \name{TriangleDualTessellationCover}
 \alias{TriangleDualTessellationCover}
 \title{Triangle Dual Tesselation Cover}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
-\usage{
-TriangleDualTessellationCover
-}
 \description{
 [R6] class representing a triangle--hexagon dual tessellation
   cover.
@@ -18,11 +14,11 @@ path-connected region of it; Schlafli symbol \eqn{{3,6}}) consists of
 congruent equiangular triangles arranged as tiles, with shared vertices and
 edges and empty overlap. In order to completely partition \eqn{Z}, each
 triangle is considered closed along part of its perimeter and open along the
-remainder. (**This remains to be carefully implemented.**) The dual \eqn{T'}
-of \eqn{T} (the regular hexagonal tessellation; Schlafli symbol \eqn{6,3}) is
-obtained by taking vertices at the centroids of the tiles of \eqn{T} and
-edges perpendicular to those of \eqn{T}. The union \eqn{C} of \eqn{T} and
-\eqn{T'} is a _triangle--hexagon dual tessellation cover_.
+remainder. The dual \eqn{T'} of \eqn{T} (the regular hexagonal tessellation;
+Schlafli symbol \eqn{6,3}) is obtained by taking vertices at the centroids of
+the tiles of \eqn{T} and edges perpendicular to those of \eqn{T}. The union
+\eqn{C} of \eqn{T} and \eqn{T'} is a _triangle--hexagon dual tessellation
+cover_.
 
 A triangle--hexagon dual tessellation cover \eqn{C} has constant "depth", in
 the sense that every point in \eqn{Z} is a member of exactly two sets in
@@ -35,21 +31,117 @@ centroid of the overlap between a pair of tiles in \eqn{T} and in \eqn{T'}.
 When `width` is sufficiently large, the total number of tiles is minimized at
 6 (though some may be empty).
 }
-\section{Fields}{
-
-\describe{
-\item{\code{width}}{A positive number. The side length of each triangle tile and the
-side-to-side length of each hexagon tile, as a fraction of the larger
-coordinate range of the lensed data.}
-}}
-
 \seealso{
-Other cover: \code{\link{FixedIntervalCover}},
-  \code{\link{IntervalDualTessellationCover}},
-  \code{\link{SquareDualTessellationCover}}
+Other cover: 
+\code{\link{FixedIntervalCover}},
+\code{\link{IntervalDualTessellationCover}},
+\code{\link{SquareDualTessellationCover}}
 }
 \author{
 Jason Cory Brunson
 }
 \concept{cover}
-\keyword{datasets}
+\section{Super class}{
+\code{\link[Mapper:CoverRef]{Mapper::CoverRef}} -> \code{TriangleDualTessellationCover}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{width}}{A positive number. The side length of each triangle tile and the
+side-to-side length of each hexagon tile, as a fraction of the larger
+coordinate range of the lensed data.}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{TriangleDualTessellationCover$new()}}
+\item \href{#method-validate}{\code{TriangleDualTessellationCover$validate()}}
+\item \href{#method-format}{\code{TriangleDualTessellationCover$format()}}
+\item \href{#method-primary_bounds}{\code{TriangleDualTessellationCover$primary_bounds()}}
+\item \href{#method-construct_index_set}{\code{TriangleDualTessellationCover$construct_index_set()}}
+\item \href{#method-construct_cover}{\code{TriangleDualTessellationCover$construct_cover()}}
+\item \href{#method-neighborhood}{\code{TriangleDualTessellationCover$neighborhood()}}
+\item \href{#method-clone}{\code{TriangleDualTessellationCover$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$new(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-validate"></a>}}
+\subsection{Method \code{validate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$validate(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\subsection{Method \code{format()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$format(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-primary_bounds"></a>}}
+\subsection{Method \code{primary_bounds()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$primary_bounds(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_index_set"></a>}}
+\subsection{Method \code{construct_index_set()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$construct_index_set(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_cover"></a>}}
+\subsection{Method \code{construct_cover()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$construct_cover(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-neighborhood"></a>}}
+\subsection{Method \code{neighborhood()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$neighborhood(filter, k)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}
