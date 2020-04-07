@@ -132,7 +132,10 @@ covers_available <- function(){
     sprintf(line_format, "fixed interval", "FixedIntervalCover", paste0(c("number_intervals", "percent_overlap"), collapse = ", ")), 
     sprintf(line_format, "restrained interval", "RestrainedIntervalCover", paste0(c("number_intervals", "percent_overlap"), collapse = ", ")),
     # sprintf(line_format, "adaptive", "AdaptiveCover", paste0(c("number_intervals", "percent_overlap", "quantile_method"), collapse = ", ")),
-    sprintf(line_format, "ball", "BallCover", paste0("epsilon", collapse = ", "))
+    sprintf(line_format, "ball", "BallCover", paste0("epsilon", collapse = ", ")),
+    sprintf(line_format, "interval dual tessellation", "IntervalDualTessellationCover", paste0("width", collapse = ", ")),
+    sprintf(line_format, "square dual tessellation", "SquareDualTessellationCover", paste0("width", collapse = ", ")),
+    sprintf(line_format, "triangle dual tessellation", "TriangleDualTessellationCover", paste0("width", collapse = ", "))
   ))
 }
 
