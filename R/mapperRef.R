@@ -850,12 +850,12 @@ MapperRef$set("public", "construct_annotation", function(k = NULL) {
                     x = lapply(self$simplicial_complex$n_simplices, seq),
                     each = seq(self$simplicial_complex$dimension + 1L))
   split_ply <- mapply(split,
-                      x = self$simplicial_complex$as_list(),
+                      x = lapply(self$simplicial_complex$as_list(), t),
                       f = rep_ply,
                       SIMPLIFY = FALSE)
   simplex_vertices <- unlist(lapply(split_ply, unname), recursive = FALSE)
   simplex_observations <- lapply(simplex_vertices, function(x) {
-    unique(unlist(self$vertices[as.character(x)]))
+    Reduce(intersect, self$vertices[as.character(x)])
   })
   simplex_sizes <- sapply(simplex_observations, length)
   simplex_colors <- sapply(simplex_observations, self$palette)
