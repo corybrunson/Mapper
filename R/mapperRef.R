@@ -555,21 +555,20 @@ MapperRef$set("public", "use_clustering_algorithm",
   }
 )
 
-## use_palette ----
-#' @name use_palette
-#' @title Assign a color palette
-#' @description Assigns a color palette to the \code{\link{MapperRef}} instance
-#'   to use when constructing a color scheme.
+## use_coloring ----
+#' @name use_coloring
+#' @title Assign a coloring
+#' @description Assigns a color scheme to the \code{\link{MapperRef}} instance.
 #' @section Usage:
 #' \preformatted{
-#'   $use_palette(palette = "rainbow", stain = NULL, ...)
+#'   $use_coloring(palette = "rainbow", stain = NULL, ...)
 #' }
 #' @param palette the name of the palette to use to construct a color scheme.
 #'   See details.
 #' @param stain a vector of length \code{nrow(self$data())} encoding the
 #'   variable by which to color simplices. If \code{NULL}, the filter is used.
 #' @param ... extra parameters passed to the palette generator. See details.
-#' @details \code{$use_palette()} does not assign colors to the observations or
+#' @details \code{$use_coloring()} does not assign colors to the observations or
 #'   simplices directly but uses a color palette to encode the values of an
 #'   observation-level staining variable. The color of a simplex is determined
 #'   by aggregating the values of this variable at its constituent observations
@@ -586,7 +585,7 @@ MapperRef$set("public", "use_clustering_algorithm",
 #'
 #'   If the package needed to compute the palette is not installed, a prompt is
 #'   given asking the user whether they would like to install it.
-MapperRef$set("public", "use_palette", function(
+MapperRef$set("public", "use_coloring", function(
   palette = "rainbow",
   stain = NULL,
   ...
@@ -827,7 +826,7 @@ MapperRef$set("public", "construct_k_skeleton", function(k=1L){
 #'   \item{\code{dimension}}{the dimension of the simplex}
 #'   \item{\code{size}}{the number of observations represented in the simplex}
 #'   \item{\code{color}}{the stain obtained using the chosen
-#'                       \code{\link[use_palette]{palette}}}
+#'                       \code{\link[use_coloring]{coloring}}}
 #' }
 MapperRef$set("public", "construct_annotation", function(k = NULL) {
   
@@ -839,7 +838,7 @@ MapperRef$set("public", "construct_annotation", function(k = NULL) {
   }
   
   # use palette if necessary
-  if (is.null(self$palette)) self$use_palette()
+  if (is.null(self$palette)) self$use_coloring()
   
   # calculate simplex dimensions
   simplex_dimensions <- rep(seq(0, self$simplicial_complex$dimension),

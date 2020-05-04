@@ -14,6 +14,6 @@ This method calculates several simplex-level variables for use with
   \item{\code{dimension}}{the dimension of the simplex}
   \item{\code{size}}{the number of observations represented in the simplex}
   \item{\code{color}}{the stain obtained using the chosen
-                      \code{\link[use_palette]{palette}}}
+                      \code{\link[use_coloring]{coloring}}}
 }
 }
