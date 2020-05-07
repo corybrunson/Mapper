@@ -557,6 +557,131 @@ MapperRef$set("public", "use_clustering_algorithm",
   }
 )
 
+## use_coloring ----
+#' @name use_coloring
+#' @title Assign a coloring
+#' @description Assigns a color scheme to the \code{\link{MapperRef}} instance.
+#' @section Usage:
+#' \preformatted{
+#'   $use_coloring(palette = "rainbow", stain = NULL, ...)
+#' }
+#' @param palette the name of the palette to use to construct a color scheme.
+#'   See details.
+#' @param stain a vector of length \code{nrow(self$data())} encoding the
+#'   variable by which to color simplices. If \code{NULL}, the filter is used.
+#' @param ... extra parameters passed to the palette generator. See details.
+#' @details \code{$use_coloring()} does not assign colors to the observations or
+#'   simplices directly but uses a color palette to encode the values of an
+#'   observation-level staining variable. The color of a simplex is determined
+#'   by aggregating the values of this variable at its constituent observations
+#'   (without duplication). The aggregations are mean values if the variable is
+#'   continuous and plurality values if the variable is discrete.
+#'
+#'   \code{palette} must be the name of a palette listed in
+#'   \code{palettes_available} and must be compatible with the variable to be
+#'   encoded. (Numeric and logical variables can use continuous palettes;
+#'   character, factor, and logical variables can use discrete palettes.) If
+#'   \code{stain} is provided, then it is verified to have length
+#'   \code{nrow(self$data())} and used as this variable; otherwise, (the first
+#'   column of) the filter \code{self$filter()} is used.
+#'
+#'   If the package needed to compute the palette is not installed, a prompt is
+#'   given asking the user whether they would like to install it.
+MapperRef$set("public", "use_coloring", function(
+  palette = "rainbow",
+  stain = NULL,
+  ...
+) {
+  
+  ## process parameters
+  
+  # available palette
+  if (! is.character(palette)) {
+    stop("`palette` must be a palette listed in `palettes_available`.")
+  }
+  if (palette %in% palettes_available$palette) {
+    pal_id <- match(palette, palettes_available$palette)
+  } else {
+    stop("Unknown palette '", palette, "';\n ",
+         "please specify a palette listed in `palettes_available`.")
+  }
+  # compatible palette
+  if (is_continuous(stain) && ! palettes_available$continuous[pal_id]) {
+    stop("Palette '", palette, "' is not suitable for continuous stain.")
+  }
+  if (is_discrete(stain) && ! palettes_available$discrete[pal_id]) {
+    stop("Palette '", palette, "' is not suitable for discrete stain.")
+  }
+  # staining variable
+  if (is.null(stain)) {
+    stain <- self$filter()
+  }
+  if (is.matrix(stain)) {
+    stain <- stain[, 1, drop = TRUE]
+  }
+  stopifnot(length(stain) == nrow(self$data()))
+  
+  ## palette parameters
+  
+  # ensure that palette package is installed
+  pal_pkg <- palettes_available$package[pal_id]
+  if (! requireNamespace(pal_pkg, quietly = TRUE)) {
+    messsage(sprintf("Using this palette requires the package '%s'.", pal_pkg))
+    response <- readline(prompt = "Would you like to install it? y/n: ")
+    if (toupper(substr(response, 1, 1)) == "Y") { install.packages(pal_pkg) }
+  }
+  # how to treat staining variable
+  ann_type <- if (is_continuous(stain)) "continuous" else "discrete"
+  # palette function
+  pal_fun <- switch(
+    palettes_available$package[pal_id],
+    grDevices = getExportedValue("grDevices", palette),
+    # -+- prompt to install grDevices package in this case? -+-
+    RColorBrewer = switch(
+      ann_type,
+      continuous = {
+        grDevices::colorRampPalette(RColorBrewer::brewer.pal(
+          n = RColorBrewer::brewer.pal.info$maxcolors[match(
+            palette,
+            rownames(RColorBrewer::brewer.pal.info)
+          )], name = palette
+        ))
+      },
+      discrete = function(n) {
+        RColorBrewer::brewer.pal(n = n, name = palette)
+      }
+    ),
+    viridis = getExportedValue("viridis", palette)
+  )
+  
+  ## palette function definition
+  
+  self$palette <- switch(
+    ann_type,
+    # continuous stainings
+    continuous = {
+      ann_min <- min(stain, na.rm = TRUE)
+      ann_ran <- diff(range(stain, na.rm = TRUE))
+      pal <- pal_fun(n = 256, ...)
+      function(idx) {
+        y <- mean(stain[idx])
+        pal[(y - ann_min) * 255 / ann_ran + 1]
+      }
+    },
+    # discrete stainings
+    discrete = {
+      ann_uniq <- unique(stain[! is.na(stain)])
+      pal <- pal_fun(n = length(ann_uniq))
+      function(idx) {
+        x <- factor(stain[idx])
+        pal[match(names(which.max(table(x))), ann_uniq)]
+      }
+    }
+  )
+  
+  invisible(self)
+})
+
 ## construct_pullback ----
 #' @name construct_pullback
 #' @title Constructs the (decomposed) pullback cover.
@@ -688,6 +813,58 @@ MapperRef$set("public", "construct_k_skeleton", function(k=1L){
   invisible(self)
 })
 
+## construct_annotation ----
+#' @name construct_annotation
+#' @title Compute simplex annotations
+#' @description Constructs a data frame of simplex-level annotations of the
+#'   mapper skeleton, to be used for plotting.
+#' @details This method calculates several simplex-level variables for use with
+#'   the \code{\link[base:plot]{$plot()}} method:
+#' \describe{
+#'   \item{\code{dimension}}{the dimension of the simplex}
+#'   \item{\code{size}}{the number of observations represented in the simplex}
+#'   \item{\code{color}}{the stain obtained using the chosen
+#'                       \code{\link[use_coloring]{coloring}}}
+#' }
+MapperRef$set("public", "construct_annotation", function(k = NULL) {
+  
+  # construct skeleton if necessary
+  if (is.null(self$simplicial_complex)) {
+    self$construct_k_skeleton(k = if (is.null(k)) 1L else k)
+  } else if (is.null(k)) {
+    k <- self$simplicial_complex$dimension
+  }
+  
+  # use palette if necessary
+  if (is.null(self$palette)) self$use_coloring()
+  
+  # calculate simplex dimensions
+  simplex_dimensions <- rep(seq(0, self$simplicial_complex$dimension),
+                            self$simplicial_complex$n_simplices)
+  # apply palette function to simplices by dimension
+  # -+- reduce memory allocation, maybe by vectorizing these steps -+-
+  rep_ply <- mapply(rep,
+                    x = lapply(self$simplicial_complex$n_simplices, seq),
+                    each = seq(self$simplicial_complex$dimension + 1L))
+  split_ply <- mapply(split,
+                      x = lapply(self$simplicial_complex$as_list(), t),
+                      f = rep_ply,
+                      SIMPLIFY = FALSE)
+  simplex_vertices <- unlist(lapply(split_ply, unname), recursive = FALSE)
+  simplex_observations <- lapply(simplex_vertices, function(x) {
+    Reduce(intersect, self$vertices[as.character(x)])
+  })
+  simplex_sizes <- sapply(simplex_observations, length)
+  simplex_colors <- sapply(simplex_observations, self$palette)
+  self$annotation <- data.frame(
+    dimension = simplex_dimensions,
+    size = simplex_sizes,
+    color = simplex_colors
+  )
+  
+  invisible(self)
+})
+
 ## format ----
 ## S3-like print override
 MapperRef$set("public", "format", function(...){
@@ -758,6 +935,32 @@ MapperRef$set("public", "as_igraph", function(vertex_scale=c("linear", "log"), v
   v_labels <- cbind(names(private$.vertices)[v_idx], vertex_sizes[v_idx])
   igraph::vertex_attr(G, "label") <- apply(v_labels, 1, function(x){ paste0(x, collapse = ":") })
   return(G)
+})
+
+## plot ----
+#' @name plot
+#' @title Plot the annotated simplicial complex
+#' @description Renders a plot of the constructed skeleton with constructed
+#'   annotation (if any).
+#' @details The simplicial complex produced by the mapper construction can be
+#'   plotted directly using the \code{\link{plot()}} method of
+#'   \link[simplextree:simplextree]{simplex tree}. This \code{MapperRef} method
+#'   is a shortcut to this method that additionally encodes the number of
+#'   observations in each simplex and their staining variable values as sizes
+#'   and colors.
+MapperRef$set("public", "plot", function(...) {
+  vids <- seq(self$simplicial_complex$n_simplices[1])
+  eids <- self$simplicial_complex$n_simplices[1] +
+    seq(self$simplicial_complex$n_simplices[2])
+  v.cex <- 5 * sqrt(self$annotation$size[vids]) /
+    sqrt(max(self$annotation$size[vids]))
+  e.cex <- 5 * sqrt(self$annotation$size[eids]) /
+    sqrt(max(self$annotation$size[eids]))
+  plot(self$simplicial_complex,
+       vertex_opt = list(cex = v.cex),
+       edge_opt = list(lwd = e.cex),
+       color_pal = self$annotation$color,
+       ...)
 })
 
 # as_upset
@@ -942,3 +1145,35 @@ MapperRef$set("public", "exportMapper", function(graph_type=c("adjacency_matrix"
   class(result) <- "Mapper"
   return(result)
 })
+
+# data frame of all predefined palettes for continuous and discrete variables
+palettes_available <- rbind(
+  data.frame(
+    palette = c("grey.colors", "rainbow", "heat.colors",
+                "terrain.colors", "topo.colors", "cm.colors"),
+    package = "grDevices",
+    continuous = TRUE, discrete = TRUE
+  ),
+  data.frame(
+    palette = c("BrBG", "PiYG", "PRGn", "PuOr", "RdBu", "RdGy", "RdYlBu",
+                "RdYlGn", "Spectral", "Blues", "BuGn", "BuPu", "GnBu", "Greens",
+                "Greys","Oranges", "OrRd", "PuBu", "PuBuGn", "PuRd", "Purples",
+                "RdPu", "Reds", "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"),
+    package = "RColorBrewer",
+    continuous = TRUE, discrete = FALSE
+  ),
+  data.frame(
+    palette = c("Accent", "Dark2", "Paired", "Pastel1", "Pastel2",
+                "Set1", "Set2", "Set3"),
+    package = "RColorBrewer",
+    continuous = FALSE, discrete = TRUE
+  ),
+  data.frame(
+    palette = c("viridis", "magma", "plasma", "inferno", "cividis"),
+    package = "viridis",
+    continuous = TRUE, discrete = TRUE
+  )
+)
+
+is_continuous <- function(x) is.numeric(x) || is.logical(x)
+is_discrete <- function(x) is.character(x) || is.factor(x) || is.logical(x)
