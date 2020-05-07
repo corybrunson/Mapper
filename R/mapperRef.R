@@ -959,6 +959,7 @@ MapperRef$set("public", "plot", function(...) {
   plot(self$simplicial_complex,
        vertex_opt = list(cex = v.cex),
        edge_opt = list(lwd = e.cex),
+       text_opt = list(cex = v.cex / pi),
        color_pal = self$annotation$color,
        ...)
 })
