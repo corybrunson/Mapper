@@ -479,6 +479,9 @@ MapperRef$set("public", "use_cover", function(cover="fixed interval", ...){
     "fixed interval"=FixedIntervalCover$new(...)$construct_cover(self$filter), 
     "restrained interval"=RestrainedIntervalCover$new(...)$construct_cover(self$filter),
     # "adaptive"=AdaptiveCover$new(...)$construct_cover(self$filter),
+    "interval dual tessellation"=IntervalDualTessellationCover$new(...)$construct_cover(self$filter),
+    "square dual tessellation"=SquareDualTessellationCover$new(...)$construct_cover(self$filter),
+    "triangle dual tessellation"=TriangleDualTessellationCover$new(...)$construct_cover(self$filter),
     "ball"=BallCover$new(...)$construct_cover(self$filter),
     stop(sprintf("Unknown cover type: %s, please specify a cover typename listed in `covers_available()`", cover))
   )
