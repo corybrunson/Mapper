@@ -828,6 +828,8 @@ MapperRef$set("public", "construct_k_skeleton", function(k=1L){
 #'   \item{\code{size}}{the number of observations represented in the simplex}
 #'   \item{\code{color}}{the stain obtained using the chosen
 #'                       \code{\link[use_coloring]{coloring}}}
+#'   \item{\code{label}}{character labels in the format '<id>:<size>',
+#'                       with <id> starting at zero}
 #' }
 MapperRef$set("public", "construct_annotation", function(k = NULL) {
   
@@ -861,10 +863,13 @@ MapperRef$set("public", "construct_annotation", function(k = NULL) {
   })
   simplex_sizes <- sapply(simplex_observations, length)
   simplex_colors <- sapply(simplex_observations, self$palette)
+  simplex_ids <- unlist(lapply(self$simplicial_complex$n_simplices, seq)) - 1L
+  simplex_labels <- paste0(simplex_ids, ":", simplex_sizes)
   self$annotation <- data.frame(
     dimension = simplex_dimensions,
     size = simplex_sizes,
-    color = simplex_colors
+    color = simplex_colors,
+    label = simplex_labels
   )
   
   invisible(self)
@@ -886,77 +891,88 @@ MapperRef$set("public", "format", function(...){
 
 ## as_igraph ----
 #' @name as_igraph
-#' @title Exports Mapper as an igraph object.
+#' @title Exports Mapper as an 'igraph' object.
 #' @description Exports the 1-skeleton to a graph using the igraph library.
 #' @param vertex_scale scaling function for the vertex sizes.
-#' @param vertex_min minimum vertex size.
-#' @param vertex_min maximum vertex size.
-#' @param col_pal color palette to color the vertices by.
-#' @details This method converts the 1-skeleton of the Mapper to an igraph object, and assigns some
-#' default visual properties. Namely, the vertex attributes "color", "size", and "label" and the
-#' edge attribute "color" are assigned.
-#' The vertex colors are colored according on the given color palette (default is rainbow) according
-#' to their mean filter value (see \code{\link{bin_color}}). The vertex sizes are scaled according
-#' to the number of points they contain, scaled by \code{vertex_scale}, and bounded between
-#' (\code{vertex_min}, \code{vertex_max}). The vertex labels are in the format "<id>:<size>".\cr
-#' \cr
-#' The edges are colored similarly by the average filter value of the points intersecting
-#' both nodes they connect too.
+#' @param vertex_limits minimum and maximum vertex size.
+#' @param edge_scale scaling function for the edge widths.
+#' @param edge_limits minimum and maximum edge widths.
+#' @details This method converts the 1-skeleton of the Mapper to an igraph
+#'   object and calculates visual properties from the \code{$annotation} (which
+#'   is constructed if necessary): the vertex attributes "color", "size", and
+#'   "label" and the edge attributes "color" and "width". The vertex and edge
+#'   sizes are scaled according to the \code{*_scale} parameters and bounded by
+#'   the \code{*_limits} parameters.
 #' @return an igraph object.
-MapperRef$set("public", "as_igraph", function(vertex_scale=c("linear", "log"), vertex_min=10L, vertex_max=15L, col_pal="rainbow"){
-  requireNamespace("igraph", quietly = TRUE)
-  am <- private$.simplicial_complex$as_adjacency_matrix()
-  colnames(am) <- as.character(private$.simplicial_complex$vertices)
-  G <- igraph::graph_from_adjacency_matrix(am, mode = "undirected", add.colnames = NULL) ## NULL makes named vertices
-
-  ## Coloring + aggregation functions
-  agg_val <- function(lst) { sapply(sapply(lst, function(idx){ rowMeans(self$filter(idx)) }), mean) }
-
-  ## Aggregate node filter values
-  v_idx <- match(private$.simplicial_complex$vertices, as.integer(names(self$vertices)))
-  agg_node_val <- agg_val(private$.vertices)
-  igraph::vertex_attr(G, name = "color") <- bin_color(agg_node_val[v_idx], col_pal = col_pal)
-
-  ## Extract indices in the edges
-  edges <- igraph::as_edgelist(G)
-  edge_idx <- lapply(seq(nrow(edges)), function(i){
-    vids <- edges[i,]
-    intersect(private$.vertices[[vids[1]]], private$.vertices[[vids[2]]])
-  })
-  agg_edge_val <- agg_val(edge_idx)
-  igraph::edge_attr(G, name = "color") <- bin_color(agg_edge_val, col_pal = col_pal)
-
-  ## Normalize between 0-1, unless all the same
-  normalize <- function(x) {
-    if (all(x == x[1])){ return(rep(1, length(x))) }
-    else {  (x - min(x))/(max(x) - min(x)) }
+MapperRef$set(
+  "public", "as_igraph",
+  function(vertex_scale = c("sqrt", "linear", "log"),
+           vertex_limits = c(0, 24), vertex_normalize = FALSE,
+           edge_scale = c("linear", "sqrt", "log"),
+           edge_limits = c(0, 12), edge_normalize = FALSE,
+           ...){
+    requireNamespace("igraph", quietly = TRUE)
+    am <- private$.simplicial_complex$as_adjacency_matrix()
+    colnames(am) <- as.character(private$.simplicial_complex$vertices)
+    G <- igraph::graph_from_adjacency_matrix(am, mode = "undirected", add.colnames = NULL) ## NULL makes named vertices
+    
+    ## Transfer un-transformed annotations
+    if (is.null(self$annotation)) {
+      self$construct_annotation(k = 1L)
+    }
+    vids <- seq(self$simplicial_complex$n_simplices[[1L]])
+    eids <- self$simplicial_complex$n_simplices[[1L]] +
+      seq(self$simplicial_complex$n_simplices[[2L]])
+    igraph::vertex_attr(G, name = "color") <- self$annotation$color[vids]
+    igraph::vertex_attr(G, name = "label") <- self$annotation$label[vids]
+    igraph::vertex_attr(G, name = "label.family") <- "sans"
+    igraph::vertex_attr(G, name = "label.color") <- "black"
+    igraph::edge_attr(G, name = "color") <- self$annotation$color[eids]
+    
+    ## Calculate size annotations
+    normalize <- function(x) {
+      if (all(x == x[[1L]])) { return(rep(1L, length(x))) }
+      else { (x - min(x)) / (max(x) - min(x)) }
+    }
+    rescale <- function(x) x / max(x)
+    # vertices
+    vertex_fun <- if (vertex_normalize) normalize else rescale
+    vertex_scale <- switch(match.arg(vertex_scale, c("sqrt", "linear", "log")),
+                           "linear" = identity, "sqrt" = sqrt, "log" = log)
+    vertex_size <- vertex_limits[[1L]] +
+      diff(vertex_limits) * vertex_fun(vertex_scale(self$annotation$size[vids]))
+    igraph::vertex_attr(G, name = "size") <- vertex_size
+    igraph::vertex_attr(G, name = "label.cex") <- vertex_size / 24
+    # edges
+    edge_fun <- if (edge_normalize) normalize else rescale
+    edge_scale <- switch(match.arg(edge_scale, c("linear", "sqrt", "log")),
+                         "linear" = identity, "sqrt" = sqrt, "log" = log)
+    edge_size <- edge_limits[[1L]] +
+      diff(edge_limits) * edge_fun(edge_scale(self$annotation$size[eids]))
+    igraph::edge_attr(G, name = "size") <- edge_size
+    igraph::edge_attr(G, name = "label.cex") <- edge_size / 24
+    
+    return(G)
   }
-  if (missing(vertex_scale)){ vertex_scale <- "linear"}
-  vertex_scale <- switch(vertex_scale, "linear"=identity, "log"=log)
-  vertex_sizes <- sapply(private$.vertices, length)
-  igraph::vertex_attr(G, "size") <- (vertex_max - vertex_min)*normalize(vertex_scale(vertex_sizes[v_idx])) + vertex_min
-
-  ## Fill in labels with id:size
-  v_labels <- cbind(names(private$.vertices)[v_idx], vertex_sizes[v_idx])
-  igraph::vertex_attr(G, "label") <- apply(v_labels, 1, function(x){ paste0(x, collapse = ":") })
-  return(G)
-})
+)
 
 ## plot ----
 #' @name plot
 #' @title Plot the annotated simplicial complex
 #' @description Renders a plot of the constructed skeleton with constructed
 #'   annotation (if any).
+#' @param ... Arguments passed to
+#'   \code{\link[simplextree:plot.Rcpp_SimplexTree]{plot.Rcpp_SimplexTree}}.
 #' @details The simplicial complex produced by the mapper construction can be
-#'   plotted directly using the \code{\link{plot()}} method of
-#'   \link[simplextree:simplextree]{simplex tree}. This \code{MapperRef} method
+#'   plotted directly using the \code{\link{plot()}} method for
+#'   \link[simplextree:simplextree]{simplex trees}. This \code{MapperRef} method
 #'   is a shortcut to this method that additionally encodes the number of
 #'   observations in each simplex and their staining variable values as sizes
 #'   and colors.
 MapperRef$set("public", "plot", function(...) {
-  vids <- seq(self$simplicial_complex$n_simplices[1])
-  eids <- self$simplicial_complex$n_simplices[1] +
-    seq(self$simplicial_complex$n_simplices[2])
+  vids <- seq(self$simplicial_complex$n_simplices[[1L]])
+  eids <- self$simplicial_complex$n_simplices[[1L]] +
+    seq(self$simplicial_complex$n_simplices[[2L]])
   v.cex <- 5 * sqrt(self$annotation$size[vids]) /
     sqrt(max(self$annotation$size[vids]))
   e.cex <- 5 * sqrt(self$annotation$size[eids]) /

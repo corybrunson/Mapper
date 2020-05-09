@@ -3,14 +3,18 @@
 \name{plot}
 \alias{plot}
 \title{Plot the annotated simplicial complex}
+\arguments{
+\item{...}{Arguments passed to
+\code{\link[simplextree:plot.Rcpp_SimplexTree]{plot.Rcpp_SimplexTree}}.}
+}
 \description{
 Renders a plot of the constructed skeleton with constructed
   annotation (if any).
 }
 \details{
 The simplicial complex produced by the mapper construction can be
-  plotted directly using the \code{\link{plot()}} method of
-  \link[simplextree:simplextree]{simplex tree}. This \code{MapperRef} method
+  plotted directly using the \code{\link{plot()}} method for
+  \link[simplextree:simplextree]{simplex trees}. This \code{MapperRef} method
   is a shortcut to this method that additionally encodes the number of
   observations in each simplex and their staining variable values as sizes
   and colors.
