@@ -15,5 +15,7 @@ This method calculates several simplex-level variables for use with
   \item{\code{size}}{the number of observations represented in the simplex}
   \item{\code{color}}{the stain obtained using the chosen
                       \code{\link[use_coloring]{coloring}}}
+  \item{\code{label}}{character labels in the format '<id>:<size>',
+                      with <id> starting at zero}
 }
 }

@@ -890,16 +890,15 @@ MapperRef$set("public", "format", function(...){
 
 ## as_igraph ----
 #' @name as_igraph 
-#' @title Exports Mapper as an igraph object.
+#' @title Exports Mapper as an 'igraph' object.
 #' @description Exports the 1-skeleton to a graph using the igraph library.
 #' @param vertex_scale scaling function for the vertex sizes. 
 #' @param vertex_limits minimum and maximum vertex size.
 #' @param edge_scale scaling function for the edge widths.
 #' @param edge_limits minimum and maximum edge widths.
-
 #' @details This method converts the 1-skeleton of the Mapper to an igraph
-#'   object and calculates visual properties from or via
-#'   \code{$construct_annotation()}: the vertex attributes "color", "size", and
+#'   object and calculates visual properties from the \code{$annotation} (which
+#'   is constructed if necessary): the vertex attributes "color", "size", and
 #'   "label" and the edge attributes "color" and "width". The vertex and edge
 #'   sizes are scaled according to the \code{*_scale} parameters and bounded by
 #'   the \code{*_limits} parameters.
@@ -961,9 +960,11 @@ MapperRef$set(
 #' @title Plot the annotated simplicial complex
 #' @description Renders a plot of the constructed skeleton with constructed
 #'   annotation (if any).
+#' @param ... Arguments passed to
+#'   \code{\link[simplextree:plot.Rcpp_SimplexTree]{plot.Rcpp_SimplexTree}}.
 #' @details The simplicial complex produced by the mapper construction can be
-#'   plotted directly using the \code{\link{plot()}} method of
-#'   \link[simplextree:simplextree]{simplex tree}. This \code{MapperRef} method
+#'   plotted directly using the \code{\link{plot()}} method for
+#'   \link[simplextree:simplextree]{simplex trees}. This \code{MapperRef} method
 #'   is a shortcut to this method that additionally encodes the number of
 #'   observations in each simplex and their staining variable values as sizes
 #'   and colors.
