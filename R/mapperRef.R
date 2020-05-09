@@ -842,15 +842,17 @@ MapperRef$set("public", "construct_annotation", function(k = NULL) {
   if (is.null(self$palette)) self$use_coloring()
   
   # calculate simplex dimensions
-  simplex_dimensions <- rep(seq(0, self$simplicial_complex$dimension),
-                            self$simplicial_complex$n_simplices)
+  n_k_simplices <- self$simplicial_complex$n_simplices[seq(k + 1L)]
+  simplex_dimensions <- rep(seq(0L, k), n_k_simplices)
   # apply palette function to simplices by dimension
   # -+- reduce memory allocation, maybe by vectorizing these steps -+-
   rep_ply <- mapply(rep,
-                    x = lapply(self$simplicial_complex$n_simplices, seq),
-                    each = seq(self$simplicial_complex$dimension + 1L))
+                    x = lapply(n_k_simplices, seq),
+                    each = seq(k + 1L),
+                    SIMPLIFY = FALSE)
   split_ply <- mapply(split,
-                      x = lapply(self$simplicial_complex$as_list(), t),
+                      x = lapply(self$simplicial_complex$as_list()[seq(k + 1L)],
+                                 t),
                       f = rep_ply,
                       SIMPLIFY = FALSE)
   simplex_vertices <- unlist(lapply(split_ply, unname), recursive = FALSE)
