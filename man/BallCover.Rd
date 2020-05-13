@@ -4,22 +4,92 @@
 \name{BallCover}
 \alias{BallCover}
 \title{Ball Cover}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
-\usage{
-BallCover
-}
 \description{
 This class provides a cover whose open sets are formed by the union of \deqn{\epsilon}-balls centered 
 about each point. Using this class requires the \code{RANN} package to be installed, and thus explicitly assumes
 the filter space endowed with the euclidean metric.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{epsilon}}{:= radius of the ball to form around each point}
-}}
-
 \author{
 Matt Piekenbrock
 }
-\keyword{datasets}
+\section{Super class}{
+\code{\link[Mapper:CoverRef]{Mapper::CoverRef}} -> \code{BallCover}
+}
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{epsilon}}{:= radius of the ball to form around each point}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{BallCover$new()}}
+\item \href{#method-validate}{\code{BallCover$validate()}}
+\item \href{#method-format}{\code{BallCover$format()}}
+\item \href{#method-construct_cover}{\code{BallCover$construct_cover()}}
+\item \href{#method-clone}{\code{BallCover$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+\item \out{<span class="pkg-link" data-pkg="Mapper" data-topic="CoverRef" data-id="neighborhood">}\href{../../Mapper/html/CoverRef.html#method-neighborhood}{\code{Mapper::CoverRef$neighborhood()}}\out{</span>}
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BallCover$new(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-validate}{}}}
+\subsection{Method \code{validate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BallCover$validate(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BallCover$format(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_cover"></a>}}
+\if{latex}{\out{\hypertarget{method-construct_cover}{}}}
+\subsection{Method \code{construct_cover()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BallCover$construct_cover(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{BallCover$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

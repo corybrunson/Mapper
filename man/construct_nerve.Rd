@@ -14,6 +14,6 @@
 Computes (or updates) the k-simplices composing the Mapper, where k >= 0.
 }
 \details{
-Compared to \code{construct_k_skeleton}, this method \emph{only} intersections 
+Compared to \code{construct_k_skeleton}, this method \emph{only} intersections
 between (k-1) simplices in the complex.
 }

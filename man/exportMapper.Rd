@@ -7,7 +7,7 @@
 \item{graph_type}{export preference on the structure the graph output.}
 }
 \value{
-List with the following members: 
+List with the following members:
 \itemize{
   \item \emph{vertices} list of the indices of the original data the current vertex intersects with.
   \item \emph{graph} some adjacency representation of the mapper graph.

@@ -12,12 +12,12 @@
 Executes the clustering algorithm on subsets of \code{X},
 }
 \details{
-This methods uses the function given by \code{clustering_algorithm} field to 
-decompose the preimages returned by the \code{cover} member into connected components, which are 
-stored as \code{vertices}. Indices may be passed to limit which sets are decomposed, otherwise 
+This methods uses the function given by \code{clustering_algorithm} field to
+decompose the preimages returned by the \code{cover} member into connected components, which are
+stored as \code{vertices}. Indices may be passed to limit which sets are decomposed, otherwise
 the sets in the cover all considered.
 \cr
-Note that this method removes the \code{vertices} associated with \code{pullback_ids}, but does not 
+Note that this method removes the \code{vertices} associated with \code{pullback_ids}, but does not
 modify the simplicial complex.
 }
 \seealso{

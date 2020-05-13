@@ -12,7 +12,7 @@ Assigns a distance measure to the \code{\link{MapperRef}} instance to use in the
 }
 
 \section{Arguments}{
- 
+
 \describe{
   \item{\code{measure}}{The distance measure to use (string).}
   \item{\code{...}}{Extra parameters passed to the distance function. See details. }
@@ -20,14 +20,14 @@ Assigns a distance measure to the \code{\link{MapperRef}} instance to use in the
 }
 
 \section{Details}{
- Unless the \code{\link[Mapper:use_clustering_algorithm]{clustering_algorithm}} has been replaced by the user, 
-by default, Mapper requires a notion of distance between objects to be defined in creating the vertices of the construction. 
+ Unless the \code{\link[Mapper:use_clustering_algorithm]{clustering_algorithm}} has been replaced by the user,
+by default, Mapper requires a notion of distance between objects to be defined in creating the vertices of the construction.
 
 The distance function is determined based on the supplied \code{measure}. \code{measure} must be one of:
 \preformatted{["euclidean", "maximum", "manhattan", "canberra", "binary", "minkowski"]}
 or, if the \pkg{proxy} and \code{\link[parallelDist]{parallelDist}} packages are installed, any name in \code{proxy::pr_DB$get_entry_names()}.\cr
 \cr
-Additional parameters passed via \code{...} are passed to either \code{\link[stats]{dist}} (or 
+Additional parameters passed via \code{...} are passed to either \code{\link[stats]{dist}} (or
 \code{\link[parallelDist]{parallelDist}} if installed).
 }
 
@@ -44,11 +44,11 @@ m$use_cover("fixed interval", number_intervals = 5, percent_overlap = 25)
 
 ## Constructs clusters with euclidean metric (default)
 m$use_distance_measure("euclidean")
-m$construct_pullback() 
+m$construct_pullback()
 
 ## Constructs clusters with p-norm (p = 1)
 m$use_distance_measure("Minkowski", p = 1L)
-m$construct_pullback() 
+m$construct_pullback()
 
 \dontrun{
 ## To see list of available measures, use:

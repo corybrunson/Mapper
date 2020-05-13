@@ -12,11 +12,11 @@
 `MapperRef` is an \link{R6} class built for parameterizing and computing mappers efficiently.
 }
 \section{Details}{
- To create a new \code{MapperRef} instance object, instantiate the class with the \code{\link[R6:R6Class]{R6 new}} operator. 
+ To create a new \code{MapperRef} instance object, instantiate the class with the \code{\link[R6:R6Class]{R6 new}} operator.
 Instantiation of a \code{MapperRef} objects requires a data matrix, or a function returning one. \cr
-The primary output of the Mapper method is a simplicial complex. 
-\cr 
-The underlying complex does not need to be modified by the user, i.e. is completely maintained by \code{\link{MapperRef}} methods 
+The primary output of the Mapper method is a simplicial complex.
+\cr
+The underlying complex does not need to be modified by the user, i.e. is completely maintained by \code{\link{MapperRef}} methods
 (e.g. \code{\link{construct_nerve}}, \code{\link{construct_k_skeleton}}, etc.).
 }
 
@@ -36,12 +36,12 @@ The underlying complex does not need to be modified by the user, i.e. is complet
 
 \itemize{
   \item{\strong{X}}: The data, as a function. Evaluation returns the data as a matrix.
-  \item{\strong{filter}}: The filter, as a function. Evaluation returns the filtered data as a matrix.  
-  \item{\strong{cover}}: The cover (a \code{\link{CoverRef}} derived object). 
+  \item{\strong{filter}}: The filter, as a function. Evaluation returns the filtered data as a matrix.
+  \item{\strong{cover}}: The cover (a \code{\link{CoverRef}} derived object).
   \item{\strong{clustering_algorithm}}: The clustering algorithm to use in the pullback.
-  \item{\strong{measure}}: Distance measure to use to compute distances in ambient space. See \code{use_distance_measure} for more details.     
-  \item{\strong{pullback}}: Mapping between the sets in the cover (by index) and the vertices (by id).  
-  \item{\strong{vertices}}: The mapper vertices. 
+  \item{\strong{measure}}: Distance measure to use to compute distances in ambient space. See \code{use_distance_measure} for more details.
+  \item{\strong{pullback}}: Mapping between the sets in the cover (by index) and the vertices (by id).
+  \item{\strong{vertices}}: The mapper vertices.
   \item{\strong{simplicial_complex}}: A \code{\link[simplextree:simplextree]{simplex tree}} object.
 }
 }

@@ -74,6 +74,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$new(...)}\if{html}{\out{</div>}}
@@ -82,6 +83,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-validate}{}}}
 \subsection{Method \code{validate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$validate(filter)}\if{html}{\out{</div>}}
@@ -90,6 +92,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
 \subsection{Method \code{format()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$format(...)}\if{html}{\out{</div>}}
@@ -98,6 +101,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-primary_bounds"></a>}}
+\if{latex}{\out{\hypertarget{method-primary_bounds}{}}}
 \subsection{Method \code{primary_bounds()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$primary_bounds(filter, index = NULL)}\if{html}{\out{</div>}}
@@ -106,6 +110,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-construct_index_set"></a>}}
+\if{latex}{\out{\hypertarget{method-construct_index_set}{}}}
 \subsection{Method \code{construct_index_set()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$construct_index_set(filter)}\if{html}{\out{</div>}}
@@ -114,6 +119,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-construct_cover"></a>}}
+\if{latex}{\out{\hypertarget{method-construct_cover}{}}}
 \subsection{Method \code{construct_cover()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$construct_cover(filter, index = NULL)}\if{html}{\out{</div>}}
@@ -122,6 +128,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-neighborhood"></a>}}
+\if{latex}{\out{\hypertarget{method-neighborhood}{}}}
 \subsection{Method \code{neighborhood()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{TriangleDualTessellationCover$neighborhood(filter, k)}\if{html}{\out{</div>}}
@@ -130,6 +137,7 @@ coordinate range of the lensed data.}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

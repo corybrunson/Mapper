@@ -4,13 +4,21 @@
 \alias{landmarks}
 \title{landmarks}
 \usage{
-landmarks(x, n, dist_method = "euclidean", seed_index = 1,
-  shuffle_data = FALSE)
+landmarks(
+  x,
+  n = NULL,
+  eps = NULL,
+  dist_method = "euclidean",
+  seed_index = 1,
+  shuffle_data = FALSE
+)
 }
 \arguments{
 \item{x}{a data matrix.}
 
 \item{n}{the number of landmarks requested.}
+
+\item{eps}{the desired radius of balls in the cover set.}
 
 \item{dist_method}{the distance metric to use. Any distance measure in the \code{proxy} package is supported.}
 
@@ -22,11 +30,15 @@ landmarks(x, n, dist_method = "euclidean", seed_index = 1,
 Computes a set of \code{n} landmarks of a point cloud.
 }
 \details{
-This function uses the greedy maxmin procedure to produce a set of \code{n} evenly spaced landmark points in the data set 
-\code{x}. Maxmin is a simple greedy algorithm that is relatively efficient, but it has a tendency to pick out extremal points. 
-If the distance metric is euclidean, an efficient Rcpp implementation is used. If another metric is requested, 
+This function uses the greedy maxmin procedure to produce a set of \code{n} evenly spaced landmark points in the data set
+\code{x}. Maxmin is a simple greedy algorithm that is relatively efficient, but it has a tendency to pick out extremal points.
+If the distance metric is euclidean, an efficient Rcpp implementation is used. If another metric is requested,
 the algorithm is performed in R.
+Alternatively, a radius \deqn{\epsilon} can be specified so that the landmark set is computed to cover the space with
+\deqn{\epsilon}-balls centered at the landmarks.
 }
 \references{
 De Silva, Vin, and Gunnar E. Carlsson. "Topological estimation using witness complexes." SPBG 4 (2004): 157-166.
+
+Dłotko, Paweł. "Ball Mapper: A Shape Summary for Topological Data Analysis." (2019). Web.
 }

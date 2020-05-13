@@ -14,16 +14,16 @@
 Sets the clustering algorithm used to construct the connected components in the pullback cover.
 }
 \details{
-If \code{cl} is a linkage criterion, a standard hierarchical clustering algorithm is used with suitable default parameters. 
-If it is a function, it must have a signature compatible with \code{function(pid, idx, self, ...)} where 
-\code{pid} is the index of the (pullback) set to cluster (see \code{CoverRef}),  
+If \code{cl} is a linkage criterion, a standard hierarchical clustering algorithm is used with suitable default parameters.
+If it is a function, it must have a signature compatible with \code{function(pid, idx, self, ...)} where
+\code{pid} is the index of the (pullback) set to cluster (see \code{CoverRef}),
 \code{idx} are the indices of the points in \code{X} to cluster on, and
-\code{self} is the \code{MapperRef} instance environment. 
+\code{self} is the \code{MapperRef} instance environment.
 \cr
 The cutoff method may be one of either c("continuous", "histogram"). See \code{\link{cutoff_first_bin}} and \code{\link{cutoff_first_threshold}}
-for what they each correspond to, respectively. Additional named parameters passed via \code{...} act as defaults to the cutting method chosen. 
-If not chosen, reasonable defaults are used. \cr 
+for what they each correspond to, respectively. Additional named parameters passed via \code{...} act as defaults to the cutting method chosen.
+If not chosen, reasonable defaults are used. \cr
 \cr
-Additional named parameters passed via the dots in \code{$clustering_algorithm} 
+Additional named parameters passed via the dots in \code{$clustering_algorithm}
 will taken precedence and override all previously set default settings.
 }

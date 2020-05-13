@@ -44,6 +44,7 @@ Matt Piekenbrock
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RestrainedIntervalCover$new(...)}\if{html}{\out{</div>}}
@@ -52,6 +53,7 @@ Matt Piekenbrock
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-validate}{}}}
 \subsection{Method \code{validate()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RestrainedIntervalCover$validate(filter)}\if{html}{\out{</div>}}
@@ -60,6 +62,7 @@ Matt Piekenbrock
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
 \subsection{Method \code{format()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RestrainedIntervalCover$format(...)}\if{html}{\out{</div>}}
@@ -68,6 +71,7 @@ Matt Piekenbrock
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-construct_index_set"></a>}}
+\if{latex}{\out{\hypertarget{method-construct_index_set}{}}}
 \subsection{Method \code{construct_index_set()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RestrainedIntervalCover$construct_index_set(...)}\if{html}{\out{</div>}}
@@ -76,6 +80,7 @@ Matt Piekenbrock
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-construct_cover"></a>}}
+\if{latex}{\out{\hypertarget{method-construct_cover}{}}}
 \subsection{Method \code{construct_cover()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RestrainedIntervalCover$construct_cover(filter, index = NULL)}\if{html}{\out{</div>}}
@@ -84,6 +89,7 @@ Matt Piekenbrock
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

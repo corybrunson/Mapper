@@ -12,8 +12,8 @@
 Sets the data matrix to associate with the mapper.
 }
 \details{
-This function sets the data for the Mapper to work on. If \code{data} is a string, 
-it must be one of the (illustrative) data sets listed in \code{data(package="Mapper")}. 
-Otherwise, \code{data} must be either a matrix of coordinate values, a function that returns a matrix of 
+This function sets the data for the Mapper to work on. If \code{data} is a string,
+it must be one of the (illustrative) data sets listed in \code{data(package="Mapper")}.
+Otherwise, \code{data} must be either a matrix of coordinate values, a function that returns a matrix of
 coordinate values.
 }
