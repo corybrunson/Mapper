@@ -4,10 +4,6 @@
 \name{FixedIntervalCover}
 \alias{FixedIntervalCover}
 \title{Fixed Interval Cover}
-\format{An object of class \code{R6ClassGenerator} of length 24.}
-\usage{
-FixedIntervalCover
-}
 \description{
 \code{\link{R6}} class representing a fixed interval cover.
 }
@@ -20,16 +16,139 @@ are not constrained by range of the filter values. \cr
 \cr 
 The mapper corresponding to this cover may be thought of as a relaxed Reeb graph.
 }
-\section{Fields}{
-
-\describe{
-\item{\code{number_intervals}}{vector of number of bins to cover the Z with (per dimension)}
-
-\item{\code{percent_overlap}}{vector of overlap percentages}
-}}
-
 \author{
 Matt Piekenbrock
 }
 \concept{cover}
-\keyword{datasets}
+\section{Super class}{
+\code{\link[Mapper:CoverRef]{Mapper::CoverRef}} -> \code{FixedIntervalCover}
+}
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{number_intervals}}{vector of number of bins to cover the Z with (per dimension)}
+
+\item{\code{percent_overlap}}{vector of overlap percentages}
+}
+\if{html}{\out{</div>}}
+}
+\section{Methods}{
+\subsection{Public methods}{
+\itemize{
+\item \href{#method-new}{\code{FixedIntervalCover$new()}}
+\item \href{#method-validate}{\code{FixedIntervalCover$validate()}}
+\item \href{#method-format}{\code{FixedIntervalCover$format()}}
+\item \href{#method-interval_bounds}{\code{FixedIntervalCover$interval_bounds()}}
+\item \href{#method-construct_index_set}{\code{FixedIntervalCover$construct_index_set()}}
+\item \href{#method-construct_cover}{\code{FixedIntervalCover$construct_cover()}}
+\item \href{#method-neighborhood}{\code{FixedIntervalCover$neighborhood()}}
+\item \href{#method-overlap_to_interval_len}{\code{FixedIntervalCover$overlap_to_interval_len()}}
+\item \href{#method-interval_len_to_percent_overlap}{\code{FixedIntervalCover$interval_len_to_percent_overlap()}}
+\item \href{#method-clone}{\code{FixedIntervalCover$clone()}}
+}
+}
+\if{html}{
+\out{<details open ><summary>Inherited methods</summary>}
+\itemize{
+}
+\out{</details>}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-new"></a>}}
+\if{latex}{\out{\hypertarget{method-new}{}}}
+\subsection{Method \code{new()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$new(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-validate"></a>}}
+\if{latex}{\out{\hypertarget{method-validate}{}}}
+\subsection{Method \code{validate()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$validate(filter)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$format(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-interval_bounds"></a>}}
+\if{latex}{\out{\hypertarget{method-interval_bounds}{}}}
+\subsection{Method \code{interval_bounds()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$interval_bounds(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_index_set"></a>}}
+\if{latex}{\out{\hypertarget{method-construct_index_set}{}}}
+\subsection{Method \code{construct_index_set()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$construct_index_set(...)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-construct_cover"></a>}}
+\if{latex}{\out{\hypertarget{method-construct_cover}{}}}
+\subsection{Method \code{construct_cover()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$construct_cover(filter, index = NULL)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-neighborhood"></a>}}
+\if{latex}{\out{\hypertarget{method-neighborhood}{}}}
+\subsection{Method \code{neighborhood()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$neighborhood(filter, k)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-overlap_to_interval_len"></a>}}
+\if{latex}{\out{\hypertarget{method-overlap_to_interval_len}{}}}
+\subsection{Method \code{overlap_to_interval_len()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$overlap_to_interval_len(filter, percent_overlap)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-interval_len_to_percent_overlap"></a>}}
+\if{latex}{\out{\hypertarget{method-interval_len_to_percent_overlap}{}}}
+\subsection{Method \code{interval_len_to_percent_overlap()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$interval_len_to_percent_overlap(filter, interval_len)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-clone}{}}}
+\subsection{Method \code{clone()}}{
+The objects of this class are cloneable with this method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FixedIntervalCover$clone(deep = FALSE)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{deep}}{Whether to make a deep clone.}
+}
+\if{html}{\out{</div>}}
+}
+}
+}

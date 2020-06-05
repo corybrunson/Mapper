@@ -555,6 +555,48 @@ MapperRef$set("public", "use_clustering_algorithm",
   }
 )
 
+## use_layout ----
+#' @name use_layout
+#' @title Choose a layout algorithm
+#' @description Assigns a layout algorithm to the \code{\link{MapperRef}}
+#'   instance.
+#' @section Usage: \preformatted{ $use_layout(layout = "auto, ...) }
+#' @param layout The type of layout to create or use. Either a valid string, a
+#'   function, or a matrix of coordinates. See details.
+#' @param ... extra parameters passed to a layout generator. See details.
+#' @details (Add details.)
+MapperRef$set("public", "use_layout", function(
+  layout = "auto",
+  ...
+) {
+  
+  ## define `layout()` function (analogous to `filter()`)
+  
+  if (is.character(layout)) {
+    # make an informed automatic choice
+    if (layout == "auto") layout <- "fr"
+    layout <- match.arg(layout, layouts_available$layout)
+    layout <- switch(
+      layout,
+      dh = function() igraph::layout_with_dh(graph = self$as_igraph(), ...),
+      fr = function() igraph::layout_with_fr(graph = self$as_igraph(), ...)
+    )
+  } else if (is.matrix(layout)) {
+    if (ncol(layout) != 2L) {
+      stop("Coordinate matrix must have two columns.")
+    }
+    #if (nrow(layout) != length(private$.simplicial_complex$vertices)) {
+    #  stop("Coordinate matrix must have one row per simplicial complex vertex.")
+    #}
+    layout <- function() layout
+  } else {
+    stopifnot(is.function(layout))
+  }
+  
+  self$layout <- layout
+  invisible(self)
+})
+
 ## use_coloring ----
 #' @name use_coloring
 #' @title Assign a coloring
@@ -874,6 +916,30 @@ MapperRef$set("public", "construct_annotation", function(k = NULL) {
   invisible(self)
 })
 
+## construct_coordinates ----
+
+#' @name construct_coordinates
+#' @title Fix vertex coordinates
+#' @description Computes (if necessary) and saves a vertex-by-2 matrix of
+#'   coordinates that will be passed by default to \code{$plot()}.
+#' @details (Add details.)
+#' @param layout passed to \code{$use_layout()}.
+#' @param ... passed to \code{$use_layout()}.
+MapperRef$set("public", "construct_coordinates", function(layout = NULL, ...) {
+  
+  # construct skeleton if necessary
+  if (is.null(self$simplicial_complex)) {
+    self$construct_k_skeleton()
+  }
+  
+  # use layout if provided or if necessary
+  if (! is.null(layout)) {
+    self$use_layout(layout = layout)
+  }
+  
+  self$coordinates <- self$layout(...)
+})
+
 ## format ----
 ## S3-like print override
 MapperRef$set("public", "format", function(...){
@@ -969,6 +1035,7 @@ MapperRef$set(
 #'   observations in each simplex and their staining variable values as sizes
 #'   and colors.
 MapperRef$set("public", "plot", function(...) {
+  # calculate annotations
   vids <- seq(self$simplicial_complex$n_simplices[[1L]])
   eids <- self$simplicial_complex$n_simplices[[1L]] +
     seq(self$simplicial_complex$n_simplices[[2L]])
@@ -976,12 +1043,22 @@ MapperRef$set("public", "plot", function(...) {
     sqrt(max(self$annotation$size[vids]))
   e.cex <- 5 * sqrt(self$annotation$size[eids]) /
     sqrt(max(self$annotation$size[eids]))
-  plot(self$simplicial_complex,
-       vertex_opt = list(cex = v.cex),
-       edge_opt = list(lwd = e.cex),
-       text_opt = list(cex = v.cex / pi),
-       color_pal = self$annotation$color,
-       ...)
+  
+  # set up and execute plot
+  plot_args <- list(x = self$simplicial_complex)
+  if (! is.null(self$coordinates)) {
+    plot_args <- c(plot_args, list(coords = self$coordinates))
+  } else if (! is.null(self$layout)) {
+    plot_args <- c(plot_args, list(coords = self$layout()))
+  }
+  plot_args <- c(plot_args, list(
+    vertex_opt = list(cex = v.cex),
+    edge_opt = list(lwd = e.cex),
+    text_opt = list(cex = v.cex / pi),
+    color_pal = self$annotation$color,
+    ...
+  ))
+  do.call(plot, plot_args)
 })
 
 # as_upset
@@ -1198,3 +1275,14 @@ palettes_available <- rbind(
 
 is_continuous <- function(x) is.numeric(x) || is.logical(x)
 is_discrete <- function(x) is.character(x) || is.factor(x) || is.logical(x)
+
+layouts_available <- rbind(
+  data.frame(
+    layout = "circular",
+    package = NA_character_
+  ),
+  data.frame(
+    layout = c("dh", "fr"),
+    package = "igraph"
+  )
+)
